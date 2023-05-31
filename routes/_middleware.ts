@@ -17,8 +17,8 @@ export async function handler(
   pb.authStore.loadFromCookie(req.headers.get("cookie") || "");
 
   if (!pb.authStore.isValid && Deno.env.get("ENVIRONMENT") === "dev") {
-    const username = Deno.env.get("PB_USERNAME_ADMIN") ?? "";
-    const password = Deno.env.get("PB_PASSWORD_ADMIN") ?? "";
+    const username = Deno.env.get("PB_ADMIN_USERNAME") ?? "";
+    const password = Deno.env.get("PB_ADMIN_PASSWORD") ?? "";
     try {
       console.debug(
         "Automatically authenticating with admin from env as we are in dev",
