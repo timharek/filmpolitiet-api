@@ -19,8 +19,7 @@
   },
   "lint": {
     "exclude": [
-      "pb_data/",
-      "pb_migrations/",
+      "pb/",
       "output"
     ],
     "rules": {
@@ -31,8 +30,8 @@
   },
   "fmt": {
     "exclude": [
-      "pb_data/",
-      "pb_migrations/"
+      "pb/",
+      "output"
     ],
     "useTabs": false,
     "lineWidth": 80,
