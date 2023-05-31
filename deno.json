@@ -5,7 +5,9 @@
     "start": "deno run -A main.ts",
     "setup:hooks": "deno run -A -r https://deno.land/x/githooks/githooks.ts",
     "check": "deno fmt --check && deno lint",
-    "pb:init": "deno run -A src/pb/init.ts"
+    "pb:init": "deno run -A src/pb/init.ts",
+    "pb:serve": "./pb/pocketbase serve",
+    "pb:upgrade": "./pb/pocketbase update"
   },
   "githooks": {
     "pre-commit": "check"
