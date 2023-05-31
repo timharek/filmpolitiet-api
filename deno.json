@@ -2,7 +2,12 @@
   "lock": false,
   "tasks": {
     "dev": "deno run -A --watch=static/,routes/ dev.ts",
-    "start": "deno run -A main.ts"
+    "start": "deno run -A main.ts",
+    "setup:hooks": "deno run -A -r https://deno.land/x/githooks/githooks.ts",
+    "check": "deno fmt --check && deno lint"
+  },
+  "githooks": {
+    "pre-commit": "check"
   },
   "importMap": "./import_map.json",
   "compilerOptions": {
