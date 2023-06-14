@@ -14,4 +14,11 @@ declare namespace App {
     id: string;
     name: string;
   }
+
+  interface Author {
+    id: string;
+    name: string;
+    url: URL;
+    email: string;
+  }
 }

@@ -11,7 +11,6 @@ export async function scrape(
   const username = Deno.env.get("PB_ADMIN_USERNAME")!;
   const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
   await pb.admins.authWithPassword(username, password);
-  console.log(pb.authStore.isValid);
 
   const site = await fetch(
     url,
@@ -25,6 +24,10 @@ export async function scrape(
       const type = await pb.collection("type").getFirstListItem<App.Type>(
         `name="${inputType}"`,
       );
+      const entryUrl = entry.querySelector("header h2 a")?.attributes
+        .getNamedItem("href")
+        ?.value as string;
+      const author = await getAuthor(pb, entryUrl);
       const formData = new FormData();
       formData.set(
         "filmpolitietId",
@@ -34,11 +37,7 @@ export async function scrape(
         "name",
         entry.querySelector("header h2 a")?.textContent as string,
       );
-      formData.set(
-        "url",
-        entry.querySelector("header h2 a")?.attributes.getNamedItem("href")
-          ?.value as string,
-      );
+      formData.set("url", entryUrl);
       formData.set("rating", String(rating));
       formData.set(
         "reviewDate",
@@ -46,6 +45,9 @@ export async function scrape(
           ?.value as string,
       );
       formData.set("type", type.id);
+      if (author) {
+        formData.set("author", author.id);
+      }
       try {
         await pb.collection("entry").create(formData);
       } catch (error) {
@@ -61,5 +63,51 @@ export async function scrape(
         }
       }
     }
+  }
+}
+
+async function getAuthor(
+  pb: PocketBase,
+  entryUrl: URL | string,
+): Promise<App.Author | undefined> {
+  const site = await fetch(
+    entryUrl,
+  ).then((res) => res.text());
+  const entryPage = new DOMParser().parseFromString(site, "text/html");
+
+  if (entryPage) {
+    const authorWrapper = entryPage.querySelector(".author-wrap");
+    const authorNameWrapper = authorWrapper?.querySelector(".b_skribent a");
+
+    const formData = new FormData();
+    formData.set("name", authorNameWrapper?.textContent as string);
+    formData.set(
+      "email",
+      authorWrapper?.querySelector(".b_epost")?.textContent as string,
+    );
+    formData.set(
+      "url",
+      authorNameWrapper?.attributes.getNamedItem("href")?.value as string,
+    );
+
+    try {
+      await pb.collection("filmpolitiet_author").create(formData);
+    } catch (error) {
+      console.error("could not create new author, trying to update");
+      try {
+        const existingAuthor = await pb.collection("filmpolitiet_author")
+          .getFirstListItem<App.Author>(`name="${formData.get("name")}"`);
+        await pb.collection("filmpolitiet_author").update(
+          existingAuthor.id,
+          formData,
+        );
+      } catch (error) {
+        console.error("could not create or update author");
+      }
+    }
+
+    return await pb.collection("filmpolitiet_author").getFirstListItem<
+      App.Author
+    >(`name="${formData.get("name")}"`);
   }
 }
