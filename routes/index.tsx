@@ -1,11 +1,10 @@
 import { Head } from "$fresh/runtime.ts";
-import Counter from "../islands/Counter.tsx";
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Fresh App</title>
+        <title>Filmpolitiet API</title>
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
         <img
@@ -14,10 +13,8 @@ export default function Home() {
           alt="the fresh logo: a sliced lemon dripping with juice"
         />
         <p class="my-6">
-          Welcome to `fresh`. Try updating this message in the
-          ./routes/index.tsx file, and refresh.
+          Velkommen til Filmpolitiets uoffisielle API.
         </p>
-        <Counter start={3} />
       </div>
     </>
   );
