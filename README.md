@@ -1,6 +1,8 @@
-# pb stack
+# Filmpolitiet API
 
-The PocketBase Deno Fresh Full-stack.
+API application made for [Filmpolitiet](https://p3.no/filmpolitiet/)'s reviews.
+
+Currently a work in progress and hasn't been deployed anywhere yet.
 
 ## Usage
 
