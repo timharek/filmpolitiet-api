@@ -7,13 +7,9 @@ export default function Home() {
         <title>Filmpolitiet API</title>
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
-        <img
-          src="/logo.svg"
-          class="w-32 h-32"
-          alt="the fresh logo: a sliced lemon dripping with juice"
-        />
         <p class="my-6">
-          Velkommen til Filmpolitiets uoffisielle API.
+          Welcome to Filmpolitiets unofficial API. You can checkout what's been
+          cached <a class="underline" href="/entries">here</a>.
         </p>
       </div>
     </>
