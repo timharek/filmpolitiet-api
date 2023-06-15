@@ -1,6 +1,6 @@
 import "https://deno.land/std@0.191.0/dotenv/load.ts";
 import PocketBase from "pb";
-import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
 export async function scrape(
   url: URL | string,
@@ -50,7 +50,7 @@ export async function scrape(
       }
       try {
         await pb.collection("entry").create(formData);
-      } catch (error) {
+      } catch (_error) {
         try {
           console.error("could not create");
           const existingEntry = await pb.collection("entry").getFirstListItem<
@@ -58,7 +58,7 @@ export async function scrape(
           >(`name="${formData.get("name")}"`);
 
           await pb.collection("entry").update(existingEntry.id, formData);
-        } catch (error) {
+        } catch (_error) {
           console.error("could not update");
         }
       }
@@ -92,7 +92,7 @@ async function getAuthor(
 
     try {
       await pb.collection("filmpolitiet_author").create(formData);
-    } catch (error) {
+    } catch (_error) {
       console.error("could not create new author, trying to update");
       try {
         const existingAuthor = await pb.collection("filmpolitiet_author")
@@ -101,7 +101,7 @@ async function getAuthor(
           existingAuthor.id,
           formData,
         );
-      } catch (error) {
+      } catch (_error) {
         console.error("could not create or update author");
       }
     }
