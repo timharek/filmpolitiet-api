@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.1.4 (unreleased)
+## v0.1.5 (unreleased)
+
+## v0.1.4
+
+- Fixed scraping for cover-art if missing.
 
 ## v0.1.3
 

@@ -127,6 +127,9 @@ async function getCoverArt(
   if (entryPage) {
     const coverArtUrlString = entryPage.querySelector(".coverart")?.attributes
       .getNamedItem("src")?.value as string;
+    if (!coverArtUrlString) {
+      return undefined;
+    }
     const coverArtUrl = coverArtUrlString.split("?src=")[1];
     console.log(coverArtUrl);
     const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
