@@ -2,6 +2,8 @@
 
 ## v0.1.5 (unreleased)
 
+- Added repsonsive grid.
+
 ## v0.1.4
 
 - Fixed scraping for cover-art if missing.

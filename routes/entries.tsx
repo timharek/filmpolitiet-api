@@ -63,7 +63,7 @@ export default function Home(props: PageProps<Props>) {
         <p class="my-6">
           Here be dragons!
         </p>
-        <ul class="grid grid-cols-3 gap-4 mb-4">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           {data.entries.map((entry) => (
             <li>
               <Card entry={entry} />
