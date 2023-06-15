@@ -2,16 +2,18 @@ import "https://deno.land/std@0.191.0/dotenv/load.ts";
 import PocketBase from "pb";
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
+interface ScrapeProps {
+  pb: PocketBase;
+  url: URL | string;
+  rating: number;
+  inputType: "movie" | "show" | "game";
+  isRecursive?: boolean;
+}
 export async function scrape(
-  url: URL | string,
-  rating = 1,
-  inputType = "movie",
+  { pb, url, rating, inputType, isRecursive }: ScrapeProps,
 ) {
-  const pb = new PocketBase(Deno.env.get("PB_URL") || "http://127.0.0.1:8090");
-  const username = Deno.env.get("PB_ADMIN_USERNAME")!;
-  const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
-  await pb.admins.authWithPassword(username, password);
-
+  console.log("isRecursive", isRecursive);
+  console.log("url", url);
   const site = await fetch(
     url,
   ).then((res) => res.text());
@@ -66,6 +68,12 @@ export async function scrape(
           console.error("could not update");
         }
       }
+    }
+    const nextPage = doc.querySelector(".post-previous a")?.attributes
+      .getNamedItem("href")?.value;
+    if (isRecursive && nextPage) {
+      console.log("is recursive and has next page");
+      await scrape({ pb, url: nextPage, rating, inputType, isRecursive: true });
     }
   }
 }
@@ -130,11 +138,16 @@ async function getCoverArt(
     if (!coverArtUrlString) {
       return undefined;
     }
-    const coverArtUrl = coverArtUrlString.split("?src=")[1];
-    console.log(coverArtUrl);
-    const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
-    const coverArtBinary = await coverArtResponse.blob();
+    try {
+      const coverArtUrl = coverArtUrlString.split("?src=")[1];
+      console.log(coverArtUrl);
+      const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
+      const coverArtBinary = await coverArtResponse.blob();
 
-    return coverArtBinary;
+      return coverArtBinary;
+    } catch (_error) {
+      console.error("could not get cover-art");
+      return undefined;
+    }
   }
 }
