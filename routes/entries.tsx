@@ -2,6 +2,7 @@ import PocketBase from "pb";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "https://deno.land/x/fresh@1.1.6/src/server/types.ts";
+import { Card } from "../components/Card.tsx";
 
 interface Props {
   entries: App.Entry[];
@@ -57,32 +58,30 @@ export default function Home(props: PageProps<Props>) {
         <p class="my-6">
           Here be dragons!
         </p>
-        <ul class="">
+        <ul class="grid grid-cols-3 gap-4 mb-4">
           {data.entries.map((entry) => (
             <li>
-              <a href={entry.url.toString()} class="underline">
-                {entry.name}
-              </a>
+              <Card entry={entry} />
             </li>
           ))}
-          <div class="flex gap-4">
-            {previousPage &&
-              (
-                <a
-                  href={`${url.pathname}?page=${previousPage}`}
-                  class="underline"
-                >
-                  Previous
-                </a>
-              )}
-            {nextPage &&
-              (
-                <a href={`${url.pathname}?page=${nextPage}`} class="underline">
-                  Next
-                </a>
-              )}
-          </div>
         </ul>
+        <div class="flex gap-4">
+          {previousPage &&
+            (
+              <a
+                href={`${url.pathname}?page=${previousPage}`}
+                class="underline"
+              >
+                Previous
+              </a>
+            )}
+          {nextPage &&
+            (
+              <a href={`${url.pathname}?page=${nextPage}`} class="underline">
+                Next
+              </a>
+            )}
+        </div>
       </div>
     </>
   );
