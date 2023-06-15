@@ -1,7 +1,7 @@
 import PocketBase from "pb";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
-import { PageProps } from "https://deno.land/x/fresh@1.1.6/src/server/types.ts";
+import { PageProps } from "$fresh/src/server/types.ts";
 import { Card } from "../components/Card.tsx";
 
 interface Props {
@@ -16,7 +16,7 @@ export const handler: Handlers = {
     const page = url.searchParams.has("page")
       ? Number(url.searchParams.get("page"))
       : 1;
-    const perPage = 50;
+    const perPage = 48;
     const pb = new PocketBase(
       Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
     );
