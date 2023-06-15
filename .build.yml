@@ -1,0 +1,30 @@
+image: ubuntu/lts
+packages:
+  - rsync
+  - unzip
+environment:
+  deploy: tim@wyd.no
+secrets:
+  - 0323bc6f-a046-4b96-8496-2bac6e7ee107
+sources:
+  - https://git@git.sr.ht/~timharek/filmpolitiet-api
+triggers:
+  - action: email
+    condition: failure
+    to: tim@harek.no
+tasks:
+  - check: |
+      cd filmpolitiet-api
+      if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
+        complete-build; \
+      fi
+  - install-deno: |
+      curl -fsSL https://deno.land/x/install/install.sh | sh
+  - test: |
+        DENO_INSTALL="/home/build/.deno"
+        PATH="$DENO_INSTALL/bin:$PATH"
+        cd filmpolitiet-api
+        deno task check
+  - deploy: |
+      sshopts="ssh -o StrictHostKeyChecking=no"
+      rsync --rsh="$sshopts" -avrP filmpolitiet-api/ $deploy:sites/filmpolitiet-api
