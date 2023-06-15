@@ -3,6 +3,7 @@
 ## v0.1.5 (unreleased)
 
 - Added repsonsive grid.
+- Added search and simple filtering.
 
 ## v0.1.4
 
