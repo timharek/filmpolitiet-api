@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.1.5 (unreleased)
+## v0.2.1 (unreleased)
+
+## v0.2.0
 
 - Added repsonsive grid.
 - Added search and simple filtering.
