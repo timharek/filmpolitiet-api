@@ -4,3 +4,4 @@
 
 - Added front-end pages.
 - Added cover-art scraping.
+- Added cover-art to Card.

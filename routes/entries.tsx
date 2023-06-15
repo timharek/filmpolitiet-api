@@ -35,7 +35,12 @@ export const handler: Handlers = {
 
     return await ctx.render(
       {
-        entries: entriesResult.items,
+        entries: entriesResult.items.map((item) => {
+          return {
+            ...item,
+            coverArt: pb.getFileUrl(item, item.coverArt),
+          };
+        }),
         page,
         totalPages: entriesResult.totalPages,
       } as Props,
