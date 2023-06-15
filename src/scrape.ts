@@ -37,6 +37,10 @@ export async function scrape(
         "name",
         entry.querySelector("header h2 a")?.textContent as string,
       );
+      const coverArtBlob = await getCoverArt(entryUrl);
+      if (coverArtBlob) {
+        formData.set("coverArt", coverArtBlob, `${formData.get("name")}.jpg`);
+      }
       formData.set("url", entryUrl);
       formData.set("rating", String(rating));
       formData.set(
@@ -109,5 +113,25 @@ async function getAuthor(
     return await pb.collection("filmpolitiet_author").getFirstListItem<
       App.Author
     >(`name="${formData.get("name")}"`);
+  }
+}
+
+async function getCoverArt(
+  entryUrl: URL | string,
+): Promise<Blob | undefined> {
+  const site = await fetch(
+    entryUrl,
+  ).then((res) => res.text());
+  const entryPage = new DOMParser().parseFromString(site, "text/html");
+
+  if (entryPage) {
+    const coverArtUrlString = entryPage.querySelector(".coverart")?.attributes
+      .getNamedItem("src")?.value as string;
+    const coverArtUrl = coverArtUrlString.split("?src=")[1];
+    console.log(coverArtUrl);
+    const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
+    const coverArtBinary = await coverArtResponse.blob();
+
+    return coverArtBinary;
   }
 }

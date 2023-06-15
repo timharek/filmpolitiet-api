@@ -5,6 +5,8 @@ declare namespace App {
     name: string;
     url: URL;
     rating: number;
+    coverArt: string;
+    reviewDate: string;
     expand: {
       type: Type;
     };
