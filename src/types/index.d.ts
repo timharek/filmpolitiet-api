@@ -9,6 +9,7 @@ declare namespace App {
     reviewDate: string;
     expand: {
       type: Type;
+      author: Author;
     };
   }
 

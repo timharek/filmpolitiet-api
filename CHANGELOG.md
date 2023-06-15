@@ -1,8 +1,11 @@
 # Changelog
 
-## v0.2.1 (unreleased)
+## v0.2.3 (unreleased)
+
+## v0.2.1
 
 - Added recursive scraping.
+- Added entry type to Card.
 
 ## v0.2.0
 

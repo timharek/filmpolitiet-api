@@ -13,6 +13,9 @@ export function Card({ entry }: CardProps) {
             className="w-16 h-16 text-white"
           />
         </div>
+        <div class="absolute bottom-0 right-0 p-2 bg-black text-white uppercase">
+          {entry.expand.type.name}
+        </div>
         {entry.coverArt &&
           <img src={entry.coverArt} class="object-cover w-full h-full" />}
       </div>
