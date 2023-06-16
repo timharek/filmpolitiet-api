@@ -63,6 +63,10 @@ export default function Home(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
 
+  const type = url.searchParams.get("type");
+  const rating = url.searchParams.get("rating");
+  const search = url.searchParams.get("q");
+
   const nextPage = data.totalPages > data.page ? data.page + 1 : false;
   const previousPage = data.page > 1 ? data.page - 1 : false;
   return (
@@ -81,6 +85,7 @@ export default function Home(props: PageProps<Props>) {
               name="q"
               placeholder="Search for movies, tv shows or games"
               class="border w-full p-2"
+              defaultValue={search as string}
             />
             <button
               type="submit"
@@ -92,7 +97,11 @@ export default function Home(props: PageProps<Props>) {
           <div class="flex gap-4">
             <div class="flex flex-col">
               <label for="type">Type</label>
-              <select name="type" class="p-2 w-max">
+              <select
+                name="type"
+                class="p-2 w-max"
+                defaultValue={type as string}
+              >
                 <option value="">-- nothing --</option>
                 <option value="movie">Movie</option>
                 <option value="show">TV Show</option>
@@ -101,7 +110,11 @@ export default function Home(props: PageProps<Props>) {
             </div>
             <div class="flex flex-col">
               <label for="rating">Rating</label>
-              <select name="rating" class="p-2 w-max">
+              <select
+                name="rating"
+                class="p-2 w-max"
+                defaultValue={rating as string}
+              >
                 <option value="">-- nothing --</option>
                 <option value="1">1</option>
                 <option value="2">2</option>

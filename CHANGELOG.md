@@ -4,6 +4,7 @@
 
 - Added header and footer.
 - Improved next and prev buttons.
+- Filter now remembers what you've already filtered on.
 
 ## v0.2.1
 
