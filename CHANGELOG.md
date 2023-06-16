@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.2.3 (unreleased)
+## v0.3.0 (unreleased)
+
+- Added header and footer.
 
 ## v0.2.1
 
