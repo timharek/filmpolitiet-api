@@ -2,6 +2,7 @@ import PocketBase from "pb";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
+import { sort } from "https://deno.land/std@0.178.0/semver/mod.ts";
 
 interface Props {
   authors: App.Author[];
@@ -28,6 +29,7 @@ export const handler: Handlers = {
     >(
       page,
       perPage,
+      { sort: "name" },
     );
 
     return await ctx.render(

@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.3.0 (unreleased)
+## v0.3.1 (unreleased)
+
+- Sort reviewers by name.
+
+## v0.3.0
 
 - Added header and footer.
 - Improved next and prev buttons.
