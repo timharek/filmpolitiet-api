@@ -69,6 +69,8 @@ export default function Home(props: PageProps<Props>) {
 
   const nextPage = data.totalPages > data.page ? data.page + 1 : false;
   const previousPage = data.page > 1 ? data.page - 1 : false;
+  const nextPageUrl = setPage(url, nextPage);
+  const previousPageUrl = setPage(url, previousPage);
   return (
     <>
       <Head>
@@ -141,7 +143,7 @@ export default function Home(props: PageProps<Props>) {
           {previousPage &&
             (
               <a
-                href={`${url.pathname}?page=${previousPage}`}
+                href={previousPageUrl.toString()}
                 class="underline"
               >
                 {"<"} Previous page
@@ -150,7 +152,7 @@ export default function Home(props: PageProps<Props>) {
           {nextPage &&
             (
               <a
-                href={`${url.pathname}?page=${nextPage}`}
+                href={nextPageUrl.toString()}
                 class="underline"
               >
                 Next page {">"}
@@ -184,4 +186,12 @@ function getFilter({ search, type, rating }: Filter) {
   }
 
   return filterArray.join(" && ");
+}
+
+function setPage(url: URL, newPage: number | false) {
+  if (!newPage) {
+    return url.toString();
+  }
+  url.searchParams.set("page", String(newPage));
+  return url.toString();
 }

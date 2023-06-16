@@ -5,6 +5,7 @@
 - Added header and footer.
 - Improved next and prev buttons.
 - Filter now remembers what you've already filtered on.
+- Page-buttons works with filters.
 
 ## v0.2.1
 
