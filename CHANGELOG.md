@@ -7,6 +7,7 @@
 - Filter now remembers what you've already filtered on.
 - Page-buttons works with filters.
 - Tidy up filter.
+- Added authors/reviewers.
 
 ## v0.2.1
 

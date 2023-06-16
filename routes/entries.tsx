@@ -6,6 +6,7 @@ import { Card } from "../components/Card.tsx";
 
 interface Props {
   entries: App.Entry[];
+  authors: App.Author[];
   page: number;
   totalPages: number;
 }
@@ -26,7 +27,10 @@ export const handler: Handlers = {
     const rating = url.searchParams.has("rating")
       ? url.searchParams.get("rating") as string
       : undefined;
-    const filter = getFilter({ search, type, rating });
+    const author = url.searchParams.has("author")
+      ? url.searchParams.get("author") as string
+      : undefined;
+    const filter = getFilter({ search, type, rating, author });
     const pb = new PocketBase(
       Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
     );
@@ -43,6 +47,9 @@ export const handler: Handlers = {
         filter,
       },
     );
+    const authors = await pb.collection("filmpolitiet_author").getFullList<
+      App.Author
+    >();
 
     return await ctx.render(
       {
@@ -54,6 +61,7 @@ export const handler: Handlers = {
         }),
         page,
         totalPages: entriesResult.totalPages,
+        authors,
       } as Props,
     );
   },
@@ -65,6 +73,7 @@ export default function Home(props: PageProps<Props>) {
 
   const type = url.searchParams.get("type");
   const rating = url.searchParams.get("rating");
+  const author = url.searchParams.get("author");
   const search = url.searchParams.get("q");
 
   const nextPage = data.totalPages > data.page ? data.page + 1 : false;
@@ -77,6 +86,9 @@ export default function Home(props: PageProps<Props>) {
         <title>Entries - Filmpolitiet API</title>
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
+        <h1 class="text-4xl font-semibold my-6">
+          Entries
+        </h1>
         <p class="my-6">
           Here be dragons!
         </p>
@@ -126,6 +138,18 @@ export default function Home(props: PageProps<Props>) {
                 <option value="6">6</option>
               </select>
             </div>
+            <div class="flex flex-col">
+              <label for="author">Author</label>
+              <select
+                name="author"
+                class="p-2 w-max"
+                defaultValue={author as string}
+              >
+                {data.authors.map((author) => (
+                  <option value={author.id}>{author.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </form>
         {data.entries.length === 0 &&
@@ -168,9 +192,10 @@ interface Filter {
   search?: string;
   type?: string;
   rating?: string;
+  author?: string;
 }
 
-function getFilter({ search, type, rating }: Filter) {
+function getFilter({ search, type, rating, author }: Filter) {
   const filterArray = [];
 
   if (search) {
@@ -183,6 +208,10 @@ function getFilter({ search, type, rating }: Filter) {
 
   if (rating) {
     filterArray.push(`rating = "${rating}"`);
+  }
+
+  if (author) {
+    filterArray.push(`author.id= "${author}"`);
   }
 
   return filterArray.join(" && ");
