@@ -9,6 +9,7 @@
 - Tidy up filter.
 - Added authors/reviewers.
 - Added placeholder docs-page.
+- Added Select component.
 
 ## v0.2.1
 

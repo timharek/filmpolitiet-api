@@ -3,6 +3,7 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
 import { Card } from "../components/Card.tsx";
+import { Select, SelectOption } from "../components/Select.tsx";
 
 interface Props {
   entries: App.Entry[];
@@ -76,6 +77,22 @@ export default function Entries(props: PageProps<Props>) {
   const author = url.searchParams.get("author");
   const search = url.searchParams.get("q");
 
+  const types: SelectOption[] = [
+    { value: "movie", label: "Movie" },
+    { value: "show", label: "TV Show" },
+    { value: "game", label: "Games" },
+  ];
+  const ratings: SelectOption[] = [];
+  for (let index = 1; index <= 6; index++) {
+    ratings.push({ value: `${index}`, label: `${index}` });
+  }
+  const authorOptions: SelectOption[] = data.authors.map((author) => {
+    return {
+      value: author.id,
+      label: author.name,
+    };
+  });
+
   const nextPage = data.totalPages > data.page ? data.page + 1 : false;
   const previousPage = data.page > 1 ? data.page - 1 : false;
   const nextPageUrl = setPage(url, nextPage);
@@ -109,48 +126,24 @@ export default function Entries(props: PageProps<Props>) {
             </button>
           </div>
           <div class="flex gap-4">
-            <div class="flex flex-col">
-              <label for="type">Type</label>
-              <select
-                name="type"
-                class="p-2 w-max"
-                defaultValue={type as string}
-              >
-                <option value=""></option>
-                <option value="movie">Movie</option>
-                <option value="show">TV Show</option>
-                <option value="game">Video-game</option>
-              </select>
-            </div>
-            <div class="flex flex-col">
-              <label for="rating">Rating</label>
-              <select
-                name="rating"
-                class="p-2 w-full"
-                defaultValue={rating as string}
-              >
-                <option value=""></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-              </select>
-            </div>
-            <div class="flex flex-col">
-              <label for="author">Author</label>
-              <select
-                name="author"
-                class="p-2 w-max"
-                defaultValue={author as string}
-              >
-                <option value=""></option>
-                {data.authors.map((author) => (
-                  <option value={author.id}>{author.name}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Type"
+              name="type"
+              options={types}
+              defaultValue={type as string}
+            />
+            <Select
+              label="Rating"
+              name="rating"
+              options={ratings}
+              defaultValue={rating as string}
+            />
+            <Select
+              label="Author"
+              name="author"
+              options={authorOptions}
+              defaultValue={author as string}
+            />
           </div>
         </form>
         {data.entries.length === 0 &&
