@@ -1,10 +1,10 @@
 [![builds.sr.ht status](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml.svg)](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml?)
 
-# Filmpolitiet API
+# [Filmpolitiet API](https://sr.ht/~timharek/filmpolitiet-api/)
 
 API application made for [Filmpolitiet](https://p3.no/filmpolitiet/)'s reviews.
 
-Currently a work in progress and hasn't been deployed anywhere yet.
+Live version [filmpolitiet.wyd.no](https://filmpolitiet.wyd.no).
 
 ## Usage
 
