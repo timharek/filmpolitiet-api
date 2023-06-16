@@ -126,7 +126,7 @@ export default function Entries(props: PageProps<Props>) {
               <label for="rating">Rating</label>
               <select
                 name="rating"
-                class="p-2 w-max"
+                class="p-2 w-full"
                 defaultValue={rating as string}
               >
                 <option value=""></option>
@@ -145,6 +145,7 @@ export default function Entries(props: PageProps<Props>) {
                 class="p-2 w-max"
                 defaultValue={author as string}
               >
+                <option value=""></option>
                 {data.authors.map((author) => (
                   <option value={author.id}>{author.name}</option>
                 ))}
