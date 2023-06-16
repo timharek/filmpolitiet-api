@@ -8,6 +8,7 @@
 - Page-buttons works with filters.
 - Tidy up filter.
 - Added authors/reviewers.
+- Added placeholder docs-page.
 
 ## v0.2.1
 
