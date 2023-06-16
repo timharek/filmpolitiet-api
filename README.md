@@ -1,3 +1,5 @@
+[![builds.sr.ht status](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml.svg)](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml?)
+
 # Filmpolitiet API
 
 API application made for [Filmpolitiet](https://p3.no/filmpolitiet/)'s reviews.
