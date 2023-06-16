@@ -2,6 +2,8 @@
 
 ## v0.3.2 (unreleased)
 
+- Sort reviewers by name in filter-listing.
+
 ## v0.3.1
 
 - Sort reviewers by name.

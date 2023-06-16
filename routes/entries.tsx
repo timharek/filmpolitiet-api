@@ -50,7 +50,7 @@ export const handler: Handlers = {
     );
     const authors = await pb.collection("filmpolitiet_author").getFullList<
       App.Author
-    >();
+    >({ sort: "name" });
 
     return await ctx.render(
       {
