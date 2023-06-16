@@ -40,7 +40,7 @@ export const handler: Handlers = {
   },
 };
 
-export default function Home(props: PageProps<Props>) {
+export default function Reviewers(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
 
