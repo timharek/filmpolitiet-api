@@ -91,7 +91,7 @@ export default function Home(props: PageProps<Props>) {
             />
             <button
               type="submit"
-              class="border bg-slate-800 text-white px-2 py-1"
+              class="border-lime-800 border-2 bg-lime-500 px-2 py-1"
             >
               Search
             </button>
@@ -104,7 +104,7 @@ export default function Home(props: PageProps<Props>) {
                 class="p-2 w-max"
                 defaultValue={type as string}
               >
-                <option value="">-- nothing --</option>
+                <option value=""></option>
                 <option value="movie">Movie</option>
                 <option value="show">TV Show</option>
                 <option value="game">Video-game</option>
@@ -117,7 +117,7 @@ export default function Home(props: PageProps<Props>) {
                 class="p-2 w-max"
                 defaultValue={rating as string}
               >
-                <option value="">-- nothing --</option>
+                <option value=""></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
