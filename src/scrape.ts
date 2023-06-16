@@ -5,15 +5,20 @@ import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts
 interface ScrapeProps {
   pb: PocketBase;
   url: URL | string;
-  rating: number;
-  inputType: "movie" | "show" | "game";
   isRecursive?: boolean;
 }
+
 export async function scrape(
-  { pb, url, rating, inputType, isRecursive }: ScrapeProps,
+  { pb, url, isRecursive }: ScrapeProps,
 ) {
   console.log("isRecursive", isRecursive);
   console.log("url", url);
+  const rating = getRatingFromUrl(url);
+  const inputType = getTypeFromUrl(url);
+
+  console.log("rating", rating);
+  console.log("type", inputType);
+
   const site = await fetch(
     url,
   ).then((res) => res.text());
@@ -150,4 +155,27 @@ async function getCoverArt(
       return undefined;
     }
   }
+}
+
+function getRatingFromUrl(url: URL | string) {
+  const ratingRegex = /terningkast-(\d+)/;
+  const ratingMatch = url.toString().match(ratingRegex);
+  const rating = ratingMatch ? ratingMatch[1] : null;
+  return rating as string;
+}
+
+function getTypeFromUrl(url: URL | string) {
+  interface InputType {
+    [key: string]: string;
+  }
+  const inputTypeEnum: InputType = {
+    "tv-serieanmeldelser": "show",
+    "spillanmeldelser": "game",
+    "filmanmeldelser": "movie",
+  };
+  const typeRegex = /(tv-serieanmeldelser|spillanmeldelser|filmanmeldelser)/;
+  const typeMatch = url.toString().match(typeRegex);
+  const inputTypeMatch = typeMatch ? typeMatch[1] : null;
+  const inputType = inputTypeEnum[inputTypeMatch as string];
+  return inputType;
 }

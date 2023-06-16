@@ -3,6 +3,7 @@
 ## v0.3.1 (unreleased)
 
 - Sort reviewers by name.
+- Added more smartness to scraping, no more specifying rating and type.
 
 ## v0.3.0
 
