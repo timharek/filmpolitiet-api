@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.3.1 (unreleased)
+## v0.3.2 (unreleased)
+
+## v0.3.1
 
 - Sort reviewers by name.
 - Added more smartness to scraping, no more specifying rating and type.
