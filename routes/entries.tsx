@@ -124,20 +124,23 @@ export default function Home(props: PageProps<Props>) {
             ))}
           </ul>
         )}
-        <div class="flex gap-4">
+        <div class="flex flex-wrap justify-between gap-4">
           {previousPage &&
             (
               <a
                 href={`${url.pathname}?page=${previousPage}`}
                 class="underline"
               >
-                Previous
+                {"<"} Previous page
               </a>
             )}
           {nextPage &&
             (
-              <a href={`${url.pathname}?page=${nextPage}`} class="underline">
-                Next
+              <a
+                href={`${url.pathname}?page=${nextPage}`}
+                class="underline"
+              >
+                Next page {">"}
               </a>
             )}
         </div>

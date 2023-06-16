@@ -3,6 +3,7 @@
 ## v0.3.0 (unreleased)
 
 - Added header and footer.
+- Improved next and prev buttons.
 
 ## v0.2.1
 
