@@ -3,6 +3,7 @@
 ## v0.3.2 (unreleased)
 
 - Sort reviewers by name in filter-listing.
+- Fixed layout for filters on smaller screens.
 
 ## v0.3.1
 

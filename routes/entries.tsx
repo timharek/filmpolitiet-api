@@ -125,7 +125,7 @@ export default function Entries(props: PageProps<Props>) {
               Search
             </button>
           </div>
-          <div class="flex gap-4">
+          <div class="flex flex-wrap gap-4">
             <Select
               label="Type"
               name="type"
