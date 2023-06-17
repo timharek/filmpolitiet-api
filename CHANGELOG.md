@@ -4,6 +4,7 @@
 
 - Sort reviewers by name in filter-listing.
 - Fixed layout for filters on smaller screens.
+- Upgraded to Deno Fresh v1.2
 
 ## v0.3.1
 
