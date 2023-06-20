@@ -48,6 +48,6 @@
     "twind/": "https://esm.sh/twind@1.07/",
     "@twind/": "https://esm.sh/@twind/",
     "$std/": "https://deno.land/std@0.190.0/",
-    "pb": "npm:pocketbase@0.15.0"
+    "pb": "https://esm.sh/pocketbase@0.15.0"
   }
 }

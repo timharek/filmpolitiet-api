@@ -5,6 +5,7 @@
 - Sort reviewers by name in filter-listing.
 - Fixed layout for filters on smaller screens.
 - Upgraded to Deno Fresh v1.2
+- Use PocketBase SDK from ESM instead of NPM.
 
 ## v0.3.1
 
