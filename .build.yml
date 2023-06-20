@@ -13,11 +13,6 @@ triggers:
     condition: failure
     to: tim@harek.no
 tasks:
-  - check: |
-      cd filmpolitiet-api
-      if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
-        complete-build; \
-      fi
   - install-deno: |
       curl -fsSL https://deno.land/x/install/install.sh | sh
   - test: |
@@ -25,6 +20,10 @@ tasks:
         PATH="$DENO_INSTALL/bin:$PATH"
         cd filmpolitiet-api
         deno task check
+        deno test -A
+        if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
+          complete-build; \
+        fi
   - deploy: |
       sshopts="ssh -o StrictHostKeyChecking=no"
       rsync --rsh="$sshopts" -avrP filmpolitiet-api/ $deploy:sites/filmpolitiet-api
