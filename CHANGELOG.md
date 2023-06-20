@@ -9,6 +9,7 @@
 - Added sleep function for all fetch-requests in order to prevent time-outs.
 - Added tests.
 - Refactored and split scraping into multiple functions.
+- Removed need for `constants.ts`, moved stuff into `deno.json`.
 
 ## v0.3.1
 

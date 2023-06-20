@@ -1,4 +1,4 @@
-import { CHANGELOG_URL, VERSION } from "../constants.ts";
+import config from "../deno.json" assert { type: "json" };
 
 export function Footer() {
   return (
@@ -11,8 +11,8 @@ export function Footer() {
               Tim Hårek
             </a>
           </div>
-          <a href={CHANGELOG_URL} target="_blank" class="underline">
-            {VERSION}
+          <a href={config.changelog} target="_blank" class="underline">
+            v{config.version}
           </a>
         </div>
       </div>
