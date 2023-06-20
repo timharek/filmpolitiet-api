@@ -1,6 +1,11 @@
 import "https://deno.land/std@0.191.0/dotenv/load.ts";
 import PocketBase from "pb";
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
+import {
+  DOMParser,
+  Element,
+  HTMLDocument,
+} from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
+import { Status } from "$fresh/server.ts";
 
 interface ScrapeProps {
   pb: PocketBase;
@@ -8,80 +13,118 @@ interface ScrapeProps {
   isRecursive?: boolean;
 }
 
-export async function scrape({ pb, url, isRecursive }: ScrapeProps) {
+export async function scrape(
+  { pb, url, isRecursive }: ScrapeProps,
+): Promise<Status.Created | Status.NoContent | Status.NotFound> {
   const rating = getRatingFromUrl(url);
   const inputType = getTypeFromUrl(url);
+  const type = await getType(pb, inputType);
 
-  const site = await fetch(url).then((res) => res.text());
-  await sleep(1000);
-  const doc = new DOMParser().parseFromString(site, "text/html");
+  const pageDocument = await getPageDoc(url);
+  if (!pageDocument) {
+    return Status.NotFound;
+  }
+  const entries = getEntries(pageDocument);
 
-  if (doc) {
-    const entries = doc.getElementsByTagName("article");
+  if (entries.length === 0) {
+    return Status.NoContent;
+  }
 
-    for (const entry of entries) {
-      const type = await pb.collection("type").getFirstListItem<App.Type>(
-        `name="${inputType}"`,
-      );
-      const entryUrl = entry.querySelector("header h2 a")?.attributes
-        .getNamedItem("href")
-        ?.value as string;
-      const author = await getAuthor(pb, entryUrl);
-      const formData = new FormData();
-      formData.set(
-        "filmpolitietId",
-        entry.attributes.getNamedItem("id")?.value as string,
-      );
-      formData.set(
-        "name",
-        entry.querySelector("header h2 a")?.textContent as string,
-      );
-      const coverArtBlob = await getCoverArt(entryUrl);
-      if (coverArtBlob) {
-        formData.set("coverArt", coverArtBlob, `${formData.get("name")}.jpg`);
-      }
-      formData.set("url", entryUrl);
-      formData.set("rating", String(rating));
-      formData.set(
-        "reviewDate",
-        entry.querySelector("header time")?.attributes.getNamedItem("datetime")
-          ?.value as string,
-      );
-      formData.set("type", type.id);
-      if (author) {
-        formData.set("author", author.id);
-      }
-      try {
-        await pb.collection("entry").create(formData);
-      } catch (_error) {
-        try {
-          console.error("could not create");
-          const existingEntry = await pb.collection("entry").getFirstListItem<
-            App.Entry
-          >(`name="${formData.get("name")}"`);
+  const parsedEntries = [];
 
-          await pb.collection("entry").update(existingEntry.id, formData);
-        } catch (_error) {
-          console.error("could not update");
-        }
-      }
+  for (const entry of entries) {
+    const parsedEntry = parseEntry(entry);
+    const url = parsedEntry.get("url") as string;
+    const coverArtBlob = await getCoverArt(url);
+    if (coverArtBlob) {
+      parsedEntry.set(
+        "coverArt",
+        coverArtBlob,
+        `${parsedEntry.get("name")}.jpg`,
+      );
     }
-    const nextPage = doc.querySelector(".post-previous a")?.attributes
-      .getNamedItem("href")?.value;
-    if (isRecursive && nextPage) {
-      console.log("is recursive and has next page");
-      await scrape({ pb, url: nextPage, isRecursive: true });
+    parsedEntry.set("type", type.id);
+    parsedEntry.set("rating", String(rating));
+    const author = await getAuthor(pb, url);
+    if (author) {
+      parsedEntry.set("author", author.id);
+    }
+
+    parsedEntries.push(parsedEntry);
+  }
+
+  for await (const entry of parsedEntries) {
+    try {
+      await pb.collection("entry").create(entry);
+    } catch (_error) {
+      try {
+        console.error("could not create");
+        const existingEntry = await pb.collection("entry").getFirstListItem<
+          App.Entry
+        >(`name="${entry.get("name")}"`);
+
+        await pb.collection("entry").update(existingEntry.id, entry);
+      } catch (_error) {
+        console.error("could not update");
+      }
     }
   }
+
+  const nextPage = pageDocument.querySelector(".post-previous a")?.attributes
+    .getNamedItem("href")?.value;
+  if (isRecursive && nextPage) {
+    console.debug("is recursive and has next page");
+    await scrape({ pb, url: nextPage, isRecursive: true });
+  }
+
+  return Status.Created;
+}
+
+async function getPageDoc(url: string | URL): Promise<HTMLDocument | null> {
+  const page = await fetch(url).then((res) => res.text());
+  await sleep(1000);
+  return new DOMParser().parseFromString(page, "text/html");
+}
+
+function getEntries(pageDocument: HTMLDocument): Element[] {
+  return pageDocument.getElementsByTagName("article");
+}
+
+function parseEntry(entry: Element) {
+  const parsedEntryMap = new FormData();
+  parsedEntryMap.set(
+    "filmpolitietId",
+    entry.attributes.getNamedItem("id")?.value as string,
+  );
+  parsedEntryMap.set(
+    "url",
+    entry.querySelector("header h2 a")?.attributes
+      .getNamedItem("href")
+      ?.value as string,
+  );
+  parsedEntryMap.set(
+    "name",
+    entry.querySelector("header h2 a")?.textContent as string,
+  );
+  parsedEntryMap.set(
+    "reviewDate",
+    entry.querySelector("header time")?.attributes.getNamedItem("datetime")
+      ?.value as string,
+  );
+  return parsedEntryMap;
+}
+
+async function getType(pb: PocketBase, type: string) {
+  return await pb.collection("type").getFirstListItem<App.Type>(
+    `name="${type}"`,
+  );
 }
 
 async function getAuthor(
   pb: PocketBase,
   entryUrl: URL | string,
 ): Promise<App.Author | undefined> {
-  const site = await fetch(entryUrl).then((res) => res.text());
-  await sleep(1000);
-  const entryPage = new DOMParser().parseFromString(site, "text/html");
+  const entryPage = await getPageDoc(entryUrl);
 
   if (entryPage) {
     const authorWrapper = entryPage.querySelector(".author-wrap");
@@ -114,16 +157,15 @@ async function getAuthor(
       }
     }
 
-    return await pb.collection("filmpolitiet_author").getFirstListItem<
+    const author = await pb.collection("filmpolitiet_author").getFirstListItem<
       App.Author
     >(`name="${formData.get("name")}"`);
+    return author ? author : undefined;
   }
 }
 
 async function getCoverArt(entryUrl: URL | string): Promise<Blob | undefined> {
-  const site = await fetch(entryUrl).then((res) => res.text());
-  await sleep(1000);
-  const entryPage = new DOMParser().parseFromString(site, "text/html");
+  const entryPage = await getPageDoc(entryUrl);
 
   if (entryPage) {
     const coverArtUrlString = entryPage.querySelector(".coverart")?.attributes
@@ -133,7 +175,7 @@ async function getCoverArt(entryUrl: URL | string): Promise<Blob | undefined> {
     }
     try {
       const coverArtUrl = coverArtUrlString.split("?src=")[1];
-      console.log(coverArtUrl);
+      console.debug(coverArtUrl);
       const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
       await sleep(1000);
       const coverArtBinary = await coverArtResponse.blob();
@@ -146,14 +188,14 @@ async function getCoverArt(entryUrl: URL | string): Promise<Blob | undefined> {
   }
 }
 
-function getRatingFromUrl(url: URL | string) {
+function getRatingFromUrl(url: URL | string): number {
   const ratingRegex = /terningkast-(\d+)/;
   const ratingMatch = url.toString().match(ratingRegex);
   const rating = ratingMatch ? ratingMatch[1] : null;
-  return rating as string;
+  return Number(rating);
 }
 
-function getTypeFromUrl(url: URL | string) {
+function getTypeFromUrl(url: URL | string): "show" | "movie" | "game" {
   interface InputType {
     [key: string]: string;
   }
@@ -166,7 +208,7 @@ function getTypeFromUrl(url: URL | string) {
   const typeMatch = url.toString().match(typeRegex);
   const inputTypeMatch = typeMatch ? typeMatch[1] : null;
   const inputType = inputTypeEnum[inputTypeMatch as string];
-  return inputType;
+  return inputType as "show" | "movie" | "game";
 }
 
 function sleep(milliseconds: number) {
@@ -174,3 +216,11 @@ function sleep(milliseconds: number) {
     setTimeout(resolve, milliseconds);
   });
 }
+
+export const forTestingOnly = {
+  getPageDoc,
+  getEntries,
+  parseEntry,
+  getRatingFromUrl,
+  getTypeFromUrl,
+};

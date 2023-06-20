@@ -7,6 +7,8 @@
 - Upgraded to Deno Fresh v1.2
 - Use PocketBase SDK from ESM instead of NPM.
 - Added sleep function for all fetch-requests in order to prevent time-outs.
+- Added tests.
+- Refactored and split scraping into multiple functions.
 
 ## v0.3.1
 

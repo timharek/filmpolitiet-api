@@ -1,6 +1,6 @@
 import "https://deno.land/std@0.191.0/dotenv/load.ts";
 import PocketBase from "pb";
-import { HandlerContext } from "$fresh/server.ts";
+import { HandlerContext, Status } from "$fresh/server.ts";
 import { scrape } from "../../src/scrape.ts";
 
 export const handler = async (
@@ -11,8 +11,6 @@ export const handler = async (
 
   try {
     const url = reqUrl.searchParams.get("url")!;
-    const type = reqUrl.searchParams.get("type")!;
-    const rating = reqUrl.searchParams.get("rating")!;
     const isRecursive = reqUrl.searchParams.has("recursive");
 
     const pb = new PocketBase(
@@ -22,17 +20,15 @@ export const handler = async (
     const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
     await pb.admins.authWithPassword(username, password);
 
-    await scrape({
-      pb,
-      url,
-      inputType: type,
-      rating: Number(rating),
-      isRecursive,
+    const res = await scrape({ pb, url, isRecursive });
+    return new Response(JSON.stringify({ message: "sucess!" }), {
+      status: res,
     });
-    return new Response(JSON.stringify({ message: "sucess!" }));
   } catch (error) {
     console.error("/api/scrape failed.");
     console.error(error);
-    return new Response(JSON.stringify({ message: "error" }));
+    return new Response(JSON.stringify({ message: "error" }), {
+      status: Status.BadRequest,
+    });
   }
 };
