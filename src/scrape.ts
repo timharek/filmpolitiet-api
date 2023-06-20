@@ -8,20 +8,12 @@ interface ScrapeProps {
   isRecursive?: boolean;
 }
 
-export async function scrape(
-  { pb, url, isRecursive }: ScrapeProps,
-) {
-  console.log("isRecursive", isRecursive);
-  console.log("url", url);
+export async function scrape({ pb, url, isRecursive }: ScrapeProps) {
   const rating = getRatingFromUrl(url);
   const inputType = getTypeFromUrl(url);
 
-  console.log("rating", rating);
-  console.log("type", inputType);
-
-  const site = await fetch(
-    url,
-  ).then((res) => res.text());
+  const site = await fetch(url).then((res) => res.text());
+  await sleep(1000);
   const doc = new DOMParser().parseFromString(site, "text/html");
 
   if (doc) {
@@ -78,7 +70,7 @@ export async function scrape(
       .getNamedItem("href")?.value;
     if (isRecursive && nextPage) {
       console.log("is recursive and has next page");
-      await scrape({ pb, url: nextPage, rating, inputType, isRecursive: true });
+      await scrape({ pb, url: nextPage, isRecursive: true });
     }
   }
 }
@@ -87,9 +79,8 @@ async function getAuthor(
   pb: PocketBase,
   entryUrl: URL | string,
 ): Promise<App.Author | undefined> {
-  const site = await fetch(
-    entryUrl,
-  ).then((res) => res.text());
+  const site = await fetch(entryUrl).then((res) => res.text());
+  await sleep(1000);
   const entryPage = new DOMParser().parseFromString(site, "text/html");
 
   if (entryPage) {
@@ -129,12 +120,9 @@ async function getAuthor(
   }
 }
 
-async function getCoverArt(
-  entryUrl: URL | string,
-): Promise<Blob | undefined> {
-  const site = await fetch(
-    entryUrl,
-  ).then((res) => res.text());
+async function getCoverArt(entryUrl: URL | string): Promise<Blob | undefined> {
+  const site = await fetch(entryUrl).then((res) => res.text());
+  await sleep(1000);
   const entryPage = new DOMParser().parseFromString(site, "text/html");
 
   if (entryPage) {
@@ -147,6 +135,7 @@ async function getCoverArt(
       const coverArtUrl = coverArtUrlString.split("?src=")[1];
       console.log(coverArtUrl);
       const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
+      await sleep(1000);
       const coverArtBinary = await coverArtResponse.blob();
 
       return coverArtBinary;
@@ -178,4 +167,10 @@ function getTypeFromUrl(url: URL | string) {
   const inputTypeMatch = typeMatch ? typeMatch[1] : null;
   const inputType = inputTypeEnum[inputTypeMatch as string];
   return inputType;
+}
+
+function sleep(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
 }
