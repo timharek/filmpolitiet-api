@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.3.2 (unreleased)
+## v0.3.3 (unreleased)
+
+## v0.3.2
 
 - Sort reviewers by name in filter-listing.
 - Fixed layout for filters on smaller screens.
