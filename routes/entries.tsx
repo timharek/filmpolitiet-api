@@ -10,6 +10,7 @@ interface Props {
   authors: App.Author[];
   page: number;
   totalPages: number;
+  filterPreview?: string;
 }
 
 export const handler: Handlers = {
@@ -63,6 +64,7 @@ export const handler: Handlers = {
         page,
         totalPages: entriesResult.totalPages,
         authors,
+        filterPreview: filter ? `filter=(${filter})` : undefined,
       } as Props,
     );
   },
@@ -109,6 +111,19 @@ export default function Entries(props: PageProps<Props>) {
         <p class="my-6">
           Here be dragons!
         </p>
+        {data.filterPreview && (
+          <details>
+            <summary>API filter preview</summary>
+
+            <div class="">
+              <code>
+                curl -X GET "https://filmpolitiet.wyd.no/api/entries" \
+                <br />
+                -d "{data.filterPreview.replaceAll('"', "'")}"
+              </code>
+            </div>
+          </details>
+        )}
         <form class="mb-4 space-y-4">
           <div class="flex gap-2">
             <input
@@ -193,19 +208,19 @@ function getFilter({ search, type, rating, author }: Filter) {
   const filterArray = [];
 
   if (search) {
-    filterArray.push(`name ~ "${search}"`);
+    filterArray.push(`name~"${search}"`);
   }
 
   if (type) {
-    filterArray.push(`type.name = "${type}"`);
+    filterArray.push(`type.name="${type}"`);
   }
 
   if (rating) {
-    filterArray.push(`rating = "${rating}"`);
+    filterArray.push(`rating="${rating}"`);
   }
 
   if (author) {
-    filterArray.push(`author.id= "${author}"`);
+    filterArray.push(`author.id="${author}"`);
   }
 
   return filterArray.join(" && ");

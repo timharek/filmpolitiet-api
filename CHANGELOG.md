@@ -11,6 +11,7 @@
 - Refactored and split scraping into multiple functions.
 - Removed need for `constants.ts`, moved stuff into `deno.json`.
 - Added auto-scraper endpoint, `/api/auto-scrape`.
+- Added a API-preview for the filter.
 
 ## v0.3.1
 
