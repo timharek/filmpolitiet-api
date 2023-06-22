@@ -11,10 +11,11 @@ interface ScrapeProps {
   pb: PocketBase;
   url: URL | string;
   isRecursive?: boolean;
+  isOverwriting?: boolean;
 }
 
 export async function scrape(
-  { pb, url, isRecursive }: ScrapeProps,
+  { pb, url, isRecursive, isOverwriting = true }: ScrapeProps,
 ): Promise<Status.Created | Status.NoContent | Status.NotFound> {
   const rating = getRatingFromUrl(url);
   const inputType = getTypeFromUrl(url);
@@ -45,7 +46,7 @@ export async function scrape(
     }
     parsedEntry.set("type", type.id);
     parsedEntry.set("rating", String(rating));
-    const author = await getAuthor(pb, url);
+    const author = await getAuthor(pb, url, isOverwriting);
     if (author) {
       parsedEntry.set("author", author.id);
     }
@@ -57,15 +58,17 @@ export async function scrape(
     try {
       await pb.collection("entry").create(entry);
     } catch (_error) {
-      try {
-        console.error("could not create");
-        const existingEntry = await pb.collection("entry").getFirstListItem<
-          App.Entry
-        >(`name="${entry.get("name")}"`);
+      if (isOverwriting) {
+        try {
+          console.error("could not create");
+          const existingEntry = await pb.collection("entry").getFirstListItem<
+            App.Entry
+          >(`name="${entry.get("name")}"`);
 
-        await pb.collection("entry").update(existingEntry.id, entry);
-      } catch (_error) {
-        console.error("could not update");
+          await pb.collection("entry").update(existingEntry.id, entry);
+        } catch (_error) {
+          console.error("could not update");
+        }
       }
     }
   }
@@ -123,6 +126,7 @@ async function getType(pb: PocketBase, type: string) {
 async function getAuthor(
   pb: PocketBase,
   entryUrl: URL | string,
+  isOverwriting = true,
 ): Promise<App.Author | undefined> {
   const entryPage = await getPageDoc(entryUrl);
 
@@ -144,16 +148,18 @@ async function getAuthor(
     try {
       await pb.collection("filmpolitiet_author").create(formData);
     } catch (_error) {
-      console.error("could not create new author, trying to update");
-      try {
-        const existingAuthor = await pb.collection("filmpolitiet_author")
-          .getFirstListItem<App.Author>(`name="${formData.get("name")}"`);
-        await pb.collection("filmpolitiet_author").update(
-          existingAuthor.id,
-          formData,
-        );
-      } catch (_error) {
-        console.error("could not create or update author");
+      if (isOverwriting) {
+        console.error("could not create new author, trying to update");
+        try {
+          const existingAuthor = await pb.collection("filmpolitiet_author")
+            .getFirstListItem<App.Author>(`name="${formData.get("name")}"`);
+          await pb.collection("filmpolitiet_author").update(
+            existingAuthor.id,
+            formData,
+          );
+        } catch (_error) {
+          console.error("could not create or update author");
+        }
       }
     }
 
