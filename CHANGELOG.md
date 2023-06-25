@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.3.4 (unreleased)
+## v0.3.5 (unreleased)
+
+## v0.3.4
+
+- Fixed bug for test in `scrape_rss_test`.
 
 ## v0.3.3
 

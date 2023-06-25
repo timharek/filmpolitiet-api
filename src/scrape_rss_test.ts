@@ -48,7 +48,7 @@ Deno.test("Get type from string: Throw error if wrong", () => {
 });
 
 Deno.test("Get rating and type", () => {
-  const items = forTestingOnly.getTitles(file);
+  const items = forTestingOnly.getItems(file);
   const item = items[1];
   const { rating, type } = forTestingOnly.getRatingAndType(item);
 
