@@ -117,13 +117,13 @@ function parseEntry(entry: Element) {
   return parsedEntryMap;
 }
 
-async function getType(pb: PocketBase, type: string) {
+export async function getType(pb: PocketBase, type: string) {
   return await pb.collection("type").getFirstListItem<App.Type>(
     `name="${type}"`,
   );
 }
 
-async function getAuthor(
+export async function getAuthor(
   pb: PocketBase,
   entryUrl: URL | string,
   isOverwriting = true,
@@ -170,7 +170,9 @@ async function getAuthor(
   }
 }
 
-async function getCoverArt(entryUrl: URL | string): Promise<Blob | undefined> {
+export async function getCoverArt(
+  entryUrl: URL | string,
+): Promise<Blob | undefined> {
   const entryPage = await getPageDoc(entryUrl);
 
   if (entryPage) {
@@ -201,15 +203,16 @@ function getRatingFromUrl(url: URL | string): number {
   return Number(rating);
 }
 
+interface InputType {
+  [key: string]: string;
+}
+export const inputTypeEnum: InputType = {
+  "tv-serieanmeldelser": "show",
+  "spillanmeldelser": "game",
+  "filmanmeldelser": "movie",
+};
+
 function getTypeFromUrl(url: URL | string): "show" | "movie" | "game" {
-  interface InputType {
-    [key: string]: string;
-  }
-  const inputTypeEnum: InputType = {
-    "tv-serieanmeldelser": "show",
-    "spillanmeldelser": "game",
-    "filmanmeldelser": "movie",
-  };
   const typeRegex = /(tv-serieanmeldelser|spillanmeldelser|filmanmeldelser)/;
   const typeMatch = url.toString().match(typeRegex);
   const inputTypeMatch = typeMatch ? typeMatch[1] : null;

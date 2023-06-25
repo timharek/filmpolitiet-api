@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.3.3 (unreleased)
+## v0.3.4 (unreleased)
+
+## v0.3.3
+
+- Refactored auto-scraper to use RSS.
 
 ## v0.3.2
 
