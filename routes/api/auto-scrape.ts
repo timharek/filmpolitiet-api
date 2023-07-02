@@ -1,4 +1,4 @@
-import "https://deno.land/std@0.191.0/dotenv/load.ts";
+import "$std/dotenv/load.ts";
 import PocketBase from "pb";
 import { HandlerContext, Status } from "$fresh/server.ts";
 import { scrapeRSS } from "../../src/scrape_rss.ts";

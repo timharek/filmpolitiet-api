@@ -6,6 +6,7 @@
 
 - Use [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) spec for changelog.
 - Moved filters above search-input.
+- Use Deno import-map for Deno's std.
 
 ### Added
 
