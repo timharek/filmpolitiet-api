@@ -6,6 +6,10 @@
 
 - Use [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) spec for changelog.
 
+### Fixed
+
+- Feed-format parsing. Filmpolitiet updated their feeds.
+
 ## [v0.3.4] - 2023-06-25
 
 ### Fixed

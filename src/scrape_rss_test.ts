@@ -7,7 +7,7 @@ const file = await Deno.readTextFile(testFeedPath);
 Deno.test("Number of items", () => {
   const items = forTestingOnly.getItems(file);
 
-  assertEquals(items.length, 5);
+  assertEquals(items.length, 10);
 });
 
 Deno.test("Title of some items", () => {
@@ -15,8 +15,8 @@ Deno.test("Title of some items", () => {
   const item1Title = items[1].title;
   const item2Title = items[2].title;
 
-  assertEquals(item1Title, "Piggy");
-  assertEquals(item2Title, "No Hard Feelings");
+  assertEquals(item1Title, "Hijack S1");
+  assertEquals(item2Title, "Fedre & mødre");
 });
 
 Deno.test("Get rating from string", () => {
@@ -52,7 +52,7 @@ Deno.test("Get rating and type", () => {
   const item = items[1];
   const { rating, type } = forTestingOnly.getRatingAndType(item);
 
-  assertEquals(item.title, "Piggy");
-  assertEquals(rating, 5);
-  assertEquals(type, "movie");
+  assertEquals(item.title, "Hijack S1");
+  assertEquals(rating, 4);
+  assertEquals(type, "show");
 });

@@ -8,7 +8,9 @@ export const handler = async (
   _ctx: HandlerContext,
 ): Promise<Response> => {
   try {
-    const feedUrl = new URL("https://p3.no/filmpolitiet/feed/");
+    const feedUrl = new URL(
+      "https://p3.no/category/filmpolitiet-anmelder/feed/",
+    );
 
     const pb = new PocketBase(
       Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
