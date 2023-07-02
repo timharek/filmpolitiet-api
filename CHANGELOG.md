@@ -7,6 +7,7 @@
 - Use [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) spec for changelog.
 - Moved filters above search-input.
 - Use Deno import-map for Deno's std.
+- Update std version from `0.190.0` -> `0.192.0`.
 
 ### Added
 
