@@ -115,8 +115,8 @@ export default function Entries(props: PageProps<Props>) {
           <details>
             <summary>API filter preview</summary>
 
-            <div class="">
-              <code>
+            <div class="p-4 bg-slate-800 text-white select-all">
+              <code class="">
                 curl -X GET "https://filmpolitiet.wyd.no/api/entries" \
                 <br />
                 -d "{data.filterPreview.replaceAll('"', "'")}"
@@ -125,21 +125,6 @@ export default function Entries(props: PageProps<Props>) {
           </details>
         )}
         <form class="mb-4 space-y-4">
-          <div class="flex gap-2">
-            <input
-              type="search"
-              name="q"
-              placeholder="Search for movies, tv shows or games"
-              class="border w-full p-2"
-              defaultValue={search as string}
-            />
-            <button
-              type="submit"
-              class="border-lime-800 border-2 bg-lime-500 px-2 py-1"
-            >
-              Search
-            </button>
-          </div>
           <div class="flex flex-wrap gap-4">
             <Select
               label="Type"
@@ -159,6 +144,21 @@ export default function Entries(props: PageProps<Props>) {
               options={authorOptions}
               defaultValue={author as string}
             />
+          </div>
+          <div class="flex gap-2">
+            <input
+              type="search"
+              name="q"
+              placeholder="Search for movies, tv shows or games"
+              class="border w-full p-2"
+              defaultValue={search as string}
+            />
+            <button
+              type="submit"
+              class="border-lime-800 border-2 bg-lime-500 px-2 py-1"
+            >
+              Search
+            </button>
           </div>
         </form>
         {data.entries.length === 0 &&

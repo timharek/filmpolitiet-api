@@ -5,11 +5,13 @@
 ### Changed
 
 - Use [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) spec for changelog.
+- Moved filters above search-input.
 
 ### Added
 
 - Review date to card.
 - Author to card.
+- Styling to code-block for preview.
 
 ### Fixed
 
