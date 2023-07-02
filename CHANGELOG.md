@@ -1,6 +1,8 @@
 # Changelog
 
-## [v0.3.5] (unreleased)
+## [v0.3.6] (unreleased)
+
+## [v0.3.5]
 
 ### Changed
 
