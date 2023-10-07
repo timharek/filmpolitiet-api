@@ -3,7 +3,7 @@ packages:
   - rsync
   - unzip
 environment:
-  deploy: tim@wyd.no
+  deploy: tim@vps.tukler.no
 secrets:
   - 0323bc6f-a046-4b96-8496-2bac6e7ee107
 sources:
@@ -25,5 +25,7 @@ tasks:
           complete-build; \
         fi
   - deploy: |
+      git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
-      rsync --rsh="$sshopts" -avrP filmpolitiet-api/ $deploy:sites/filmpolitiet-api
+      rsync --rsh="$sshopts" -avrP --exclude "last_deploy" . $deploy:/var/www/filmpolitiet.wyd.no
+      rsync --rsh="$sshopts" -avrP last_deploy $deploy:/var/www/filmpolitiet.wyd.no/last_deploy
