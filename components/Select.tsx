@@ -14,7 +14,8 @@ export function Select(props: SelectProps) {
     <div class="flex flex-col">
       <label class="font-semibold" for={props.name}>{props.label}</label>
       <select
-        class="p-2 w-max rounded"
+        id={props.name}
+        class="p-2 w-max rounded dark:text-black"
         {...props}
       >
         {!props.notFirstEmpty && <option value=""></option>}
