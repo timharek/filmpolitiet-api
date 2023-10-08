@@ -115,7 +115,7 @@ export default function Entries(props: PageProps<Props>) {
           <details>
             <summary>API filter preview</summary>
 
-            <div class="p-4 bg-slate-800 text-white select-all">
+            <div class="p-4 bg-slate-800 text-white select-all rounded">
               <code class="">
                 curl -X GET "https://filmpolitiet.wyd.no/api/entries" \
                 <br />
