@@ -1,113 +1,203 @@
 # Changelog
 
-## [v0.3.6] (unreleased)
+All notable changes to this project will be documented in this file.
 
-## [v0.3.5]
+## [0.4.0] - 2023-10-08
 
-### Changed
+### Bug Fixes
 
-- Use [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) spec for changelog.
-- Moved filters above search-input.
-- Use Deno import-map for Deno's std.
-- Update std version from `0.190.0` -> `0.192.0`.
+- A11y stuff
+- A11y invisible text on dark-mode
 
-### Added
+### Features
 
-- Review date to card.
-- Author to card.
-- Styling to code-block for preview.
+- Add dark-mode
+- Simplify footer
+- Add git-cliff
 
-### Fixed
+### Miscellaneous Tasks
 
-- Feed-format parsing. Filmpolitiet updated their feeds.
+- Change deploy server
 
-## [v0.3.4] - 2023-06-25
+### Styling
 
-### Fixed
+- Add colors and adjust styling in general
+- Add disc to list items
+- Add rounded to filter-box
 
-- Bug for test in `scrape_rss_test`.
+## [0.3.5] - 2023-07-02
 
-## [v0.3.3] - 2023-06-25
+### Bug Fixes
 
-### Changed
+- Feed-format
 
-- Auto-scraper now uses RSS.
+### Features
 
-## [v0.3.2] - 2023-06-22
+- Add reviewDate and author
 
-### Added
+### Miscellaneous Tasks
 
-- Sleep function for all fetch-requests in order to prevent time-outs.
-- Tests.
-- Auto-scraper endpoint, `/api/auto-scrape`.
-- API-preview for the filters.
+- Bump dev version
+- Change changelog-format
+- Update layout
+- Use import map for std
+- Update std 0.190.0 -> 0.192.0
+- Version bump
 
-### Changed
+## [0.3.4] - 2023-06-25
 
-- Sort reviewers by name in filter-listing.
-- Upgraded to Deno Fresh v1.2
-- Use PocketBase SDK from ESM instead of NPM.
-- Refactored and split scraping into multiple functions.
+### Bug Fixes
 
-### Removed
+- Update function name
 
-- `constants.ts`, moved stuff into `deno.json`.
+### Miscellaneous Tasks
 
-### Fixed
+- Bump dev version
 
-- Fixed layout for filters on smaller screens.
+## [0.3.3] - 2023-06-25
 
-## [v0.3.1] - 2023-06-16
+### Features
 
-### Added
+- Auto-scrape with RSS
 
-- More smartness to scraping, no more specifying rating and type.
+### Miscellaneous Tasks
 
-### Changed
+- Dev version bump
 
-- Sort reviewers by name.
+## [0.3.2] - 2023-06-22
 
-## [v0.3.0] - 2023-06-16
+### Bug Fixes
 
-### Added
+- Sort reviewers
+- Add wrap to flex-items
 
-- Header and footer.
-- Authors/reviewers.
-- Placeholder docs-page.
-- `<Select>`-component.
+### Features
 
-### Changed
+- Add auto-scraper endpoint
+- Add API-preview for the filter
 
-- Improved next and prev buttons.
-- Filter now remembers what you've already filtered on.
-- Page-buttons works with filters.
-- Tidy up filter.
+### Miscellaneous Tasks
 
-## [v0.2.1] - 2023-06-15
+- Update README
+- Upgrade Deno Fresh
+- Use PocketBase SDK from ESM instead of NPM
+- Add sleep-function to prevent time-outs
+- Add test runner
+- Move stuff from constants into deno.json
+- Version bump
 
-### Added
+### Refactor
 
-- Recursive scraping.
-- Entry type to Card.
+- Split into multiple functions and add tests
 
-## [v0.2.0] - 2023-06-15
+## [0.3.1] - 2023-06-16
 
-### Added
+### Features
 
-- Repsonsive grid.
-- Search and simple filtering.
+- Add rating and type checking
 
-## [v0.1.4] - 2023-06-15
+### Miscellaneous Tasks
 
-### Fixed
+- Add build badge
+- Sort reviewers by name
+- Version bump
 
-- Scraping for cover-art if missing.
+## [0.3.0] - 2023-06-16
 
-## [v0.1.3] - 2023-06-15
+### Features
 
-### Added
+- Add Header and Footer
+- Remember filter after page refresh
+- Make page-buttons work with filters
+- Add authors/reviewers
+- Add docs-placeholder
+- Add Select component
 
-- Front-end pages.
-- Cover-art scraping.
-- Cover-art to Card.
-- Dice to cover-art.
+### Miscellaneous Tasks
+
+- Add license
+- Improve next and prev buttons
+- Tidy filter
+- Rename pages
+- Add first empty
+- Update text on index
+
+## [0.2.1] - 2023-06-15
+
+### Features
+
+- Add recursive scraping
+- Add entry type to Card
+
+## [0.2.0] - 2023-06-15
+
+### Features
+
+- Add responsive grid
+- Add search and simple filtering
+
+### Miscellaneous Tasks
+
+- Version bump
+
+## [0.1.4] - 2023-06-15
+
+### Bug Fixes
+
+- If cover-art is missing
+
+## [0.1.3] - 2023-06-15
+
+### Features
+
+- Add pages
+- Add Card component
+- Add cover-art scraping
+- Add cover-art to Card
+- Add dice to cover-art
+
+### Miscellaneous Tasks
+
+- Version bump
+
+## [0.1.2] - 2023-06-15
+
+### Bug Fixes
+
+- Add support for more envs
+
+## [0.1.0] - 2023-06-15
+
+### Bug Fixes
+
+- Ignore correct path
+- Formatting
+
+### Documentation
+
+- Update README
+
+### Features
+
+- Upgrade twind to v1
+- Add git-hooks
+- Add script for downloading latest PocketBase
+- Install PocketBase SDK and add middleware
+- Add login and logout routes
+- Add changelog
+- Add initial scraping
+- Add author
+- Add api endpoint for getting all entires with filters++
+- Add CI steps
+
+### Miscellaneous Tasks
+
+- Add start task and linting and formatting
+- Add scripts for serving and upgrading PocketBase binary
+- Add dotenv defaults
+- Run pb and app in paralell
+- Remove unused routes
+- Remove unused stuff
+- Update README
+
+<!-- generated by git-cliff -->
