@@ -10,20 +10,21 @@ interface DiceProps {
   className?: string;
 }
 export function Dice({ side, className }: DiceProps) {
+  const ariaLabel = `Die ${side}`;
   if (side === 1) {
-    return <IconDice1 class={className} />;
+    return <IconDice1 class={className} aria-label={ariaLabel} />;
   }
   if (side === 2) {
-    return <IconDice2 class={className} />;
+    return <IconDice2 class={className} aria-label={ariaLabel} />;
   }
   if (side === 3) {
-    return <IconDice3 class={className} />;
+    return <IconDice3 class={className} aria-label={ariaLabel} />;
   }
   if (side === 4) {
-    return <IconDice4 class={className} />;
+    return <IconDice4 class={className} aria-label={ariaLabel} />;
   }
   if (side === 5) {
-    return <IconDice5 class={className} />;
+    return <IconDice5 class={className} aria-label={ariaLabel} />;
   }
-  return <IconDice6 class={className} />;
+  return <IconDice6 class={className} aria-label={ariaLabel} />;
 }

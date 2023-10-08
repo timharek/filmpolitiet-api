@@ -146,7 +146,9 @@ export default function Entries(props: PageProps<Props>) {
             />
           </div>
           <div class="flex gap-2">
+            <label for="search" class="hidden">Search</label>
             <input
+              id="search"
               type="search"
               name="q"
               placeholder="Search for movies, tv shows or games"
@@ -155,7 +157,7 @@ export default function Entries(props: PageProps<Props>) {
             />
             <button
               type="submit"
-              class="bg-primary hover:(bg-primary-hover text-white) px-4 py-1 rounded font-semibold transition-all"
+              class="bg-primary text-black hover:(bg-primary-hover text-white) px-4 py-1 rounded font-semibold transition-all"
             >
               Search
             </button>

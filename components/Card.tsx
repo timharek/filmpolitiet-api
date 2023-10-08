@@ -17,7 +17,7 @@ export function Card({ entry }: CardProps) {
             className="w-16 h-16 text-white"
           />
         </div>
-        <div class="absolute z-20 top-0 right-0 px-2 py-1 bg-primary uppercase font-semibold rounded-bl">
+        <div class="absolute z-20 top-0 right-0 px-2 py-1 bg-primary text-black uppercase font-semibold rounded-bl">
           {entry.expand.type.name}
         </div>
         {entry.coverArt &&
@@ -25,6 +25,7 @@ export function Card({ entry }: CardProps) {
             <img
               src={entry.coverArt}
               class="group-hover:scale-105 object-cover w-full h-full transition-all"
+              alt=""
             />
           )}
       </a>

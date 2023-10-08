@@ -18,7 +18,7 @@ export function Select(props: SelectProps) {
         class="p-2 w-max rounded dark:text-black"
         {...props}
       >
-        {!props.notFirstEmpty && <option value=""></option>}
+        {!props.notFirstEmpty && <option disabled selected value=""></option>}
         {Array.from(props.options).map((option) => (
           <option value={option.value}>{option.label}</option>
         ))}
