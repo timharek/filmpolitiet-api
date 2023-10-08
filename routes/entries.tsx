@@ -152,7 +152,7 @@ export default function Entries(props: PageProps<Props>) {
               type="search"
               name="q"
               placeholder="Search for movies, tv shows or games"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded text-black"
               defaultValue={search as string}
             />
             <button
