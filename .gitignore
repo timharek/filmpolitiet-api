@@ -8,3 +8,6 @@
 # PocketBase
 pb/
 !src/pb
+
+# Fresh build directory
+_fresh/
