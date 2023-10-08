@@ -12,9 +12,9 @@ interface SelectProps extends Partial<Omit<HTMLSelectElement, "options">> {
 export function Select(props: SelectProps) {
   return (
     <div class="flex flex-col">
-      <label for={props.name}>{props.label}</label>
+      <label class="font-semibold" for={props.name}>{props.label}</label>
       <select
-        class="p-2 w-max"
+        class="p-2 w-max rounded"
         {...props}
       >
         {!props.notFirstEmpty && <option value=""></option>}

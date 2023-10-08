@@ -150,12 +150,12 @@ export default function Entries(props: PageProps<Props>) {
               type="search"
               name="q"
               placeholder="Search for movies, tv shows or games"
-              class="border w-full p-2"
+              class="border w-full p-2 rounded"
               defaultValue={search as string}
             />
             <button
               type="submit"
-              class="border-lime-800 border-2 bg-lime-500 px-2 py-1"
+              class="bg-primary hover:(bg-primary-hover text-white) px-4 py-1 rounded font-semibold transition-all"
             >
               Search
             </button>
