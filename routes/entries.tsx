@@ -104,7 +104,7 @@ export default function Entries(props: PageProps<Props>) {
       <Head>
         <title>Entries - Filmpolitiet API</title>
       </Head>
-      <div class="p-4 mx-auto max-w-screen-md">
+      <div class="px-4 mx-auto max-w-screen-md">
         <h1 class="text-4xl font-semibold my-6">
           Entries
         </h1>

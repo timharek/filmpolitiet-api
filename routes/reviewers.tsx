@@ -62,7 +62,7 @@ export default function Reviewers(props: PageProps<Props>) {
         {data.authors.length === 0 &&
           <p class="">No results. Check back later.</p>}
         {data.authors.length > 0 && (
-          <ul class="columns-2 space-y-2 mb-4">
+          <ul class="columns-2 space-y-2 mb-4 list-disc pl-5">
             {data.authors.map((author) => (
               <li>
                 <a href={`/entries?author=${author.id}`} class="underline">
