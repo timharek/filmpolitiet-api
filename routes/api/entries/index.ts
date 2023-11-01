@@ -11,6 +11,8 @@ export const handler = async (
   const perPage = Number(reqUrl.searchParams.get("perPage")) ?? 50;
   const filter = reqUrl.searchParams.get("filter") as string;
 
+  const headers = new Headers();
+  headers.set("content-type", "application/json");
   try {
     const pb = new PocketBase(
       Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
@@ -23,10 +25,10 @@ export const handler = async (
       perPage,
       { filter, expand: "type, author" },
     );
-    return new Response(JSON.stringify(result, null, 2));
+    return new Response(JSON.stringify(result, null, 2), { headers });
   } catch (error) {
     console.error("/api/entries failed.");
     console.error(error);
-    return new Response(JSON.stringify({ message: "error" }));
+    return new Response(JSON.stringify({ message: "error" }), { headers });
   }
 };
