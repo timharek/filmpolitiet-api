@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Bug Fixes
+
+- Use content-type for JSON response
+
 ## [0.4.2] - 2023-10-08
 
 ### Bug Fixes
