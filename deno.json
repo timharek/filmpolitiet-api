@@ -59,6 +59,7 @@
     "twind/": "https://esm.sh/twind@1.0.7/",
     "@twind/": "https://esm.sh/@twind/",
     "$std/": "https://deno.land/std@0.192.0/",
-    "pb": "https://esm.sh/pocketbase@0.15.2"
+    "pb": "https://esm.sh/pocketbase@0.15.2",
+    "sqlite": "https://deno.land/x/sqlite@v3.8/mod.ts"
   }
 }
