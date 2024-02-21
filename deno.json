@@ -7,7 +7,7 @@
     "dev": "deno run -A --watch=static/,routes/ dev.ts",
     "start": "deno run -A main.ts",
     "setup:hooks": "deno run -A -r https://deno.land/x/githooks/githooks.ts",
-    "check": "deno fmt --check && deno lint",
+    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "pb:init": "deno run -A src/pb/init.ts",
     "pb:serve": "pocketbase serve --dir pb/pb_data",
     "pb:upgrade": "pocketbase update",

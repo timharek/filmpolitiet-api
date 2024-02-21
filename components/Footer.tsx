@@ -1,4 +1,4 @@
-import config from "../deno.json" assert { type: "json" };
+import config from "../deno.json" with { type: "json" };
 
 export function Footer() {
   return (
