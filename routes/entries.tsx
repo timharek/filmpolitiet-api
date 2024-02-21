@@ -39,6 +39,7 @@ export const handler: Handlers<Props> = {
     );
 
     const where = getFilter({ q, type, rating, author });
+    console.log("where", where);
 
     const entries = Entry.getAll(where);
     const authors = Author.getAll();
@@ -191,7 +192,8 @@ function getFilter(
   const args = {} as Where<keyof EntryData>["args"];
 
   if (q) {
-    filters.push(`name~"${q}"`);
+    filters.push(`title LIKE '%' || :title || '%'`);
+    args.title = q;
   }
 
   if (type) {
