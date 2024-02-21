@@ -36,16 +36,21 @@ export class Entry {
     return new Entry(result[0]);
   }
 
-  // TODO: Add pagintion. https://todo.sr.ht/~timharek/filmpolitiet-api/1
-  public static getAll(where?: Where<keyof EntryData> | null): Entry[] {
+  public static getAll(
+    pageSize = 48,
+    pageNo = 1,
+    where?: Where<keyof EntryData> | null,
+  ): Entry[] {
     const entries: Entry[] = [];
     let result: EntryData[];
+    const offset = (pageNo - 1) * pageSize;
+    const paginationString = `LIMIT ${pageSize} OFFSET ${offset ?? 0}`;
     result = db.queryEntries<EntryData>(
-      "SELECT * FROM entry",
+      `SELECT * FROM entry ORDER BY reviewDate DESC ${paginationString}`,
     );
     if (where) {
       result = db.queryEntries<EntryData>(
-        `SELECT * FROM entry WHERE ${where.string}`,
+        `SELECT * FROM entry WHERE ${where.string} ORDER BY reviewDate DESC ${paginationString}`,
         where.args,
       );
     }
@@ -55,6 +60,14 @@ export class Entry {
     }
 
     return entries;
+  }
+
+  public static count(): number {
+    const result = db.queryEntries<EntryData>(
+      `SELECT * FROM entry ORDER BY reviewDate DESC`,
+    );
+
+    return result.length;
   }
 
   public static getType(title: string): EntryType | null {

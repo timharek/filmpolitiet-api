@@ -21,6 +21,7 @@ const searchParamsSchema = zfd.formData({
   type: zfd.text(z.enum(["movie", "show", "game"]).optional()),
   rating: zfd.numeric(z.number().min(1).max(6).optional()),
   author: zfd.numeric(z.number().optional()),
+  page: zfd.numeric(z.number().default(1)),
 });
 
 type SearchParams = z.infer<typeof searchParamsSchema>;
@@ -28,18 +29,17 @@ type SearchParams = z.infer<typeof searchParamsSchema>;
 export const handler: Handlers<Props> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
-    const page = url.searchParams.has("page")
-      ? Number(url.searchParams.get("page"))
-      : 1;
-    const perPage = 48;
 
-    const { q, type, rating, author } = searchParamsSchema.parse(
+    const { q, type, rating, author, page } = searchParamsSchema.parse(
       url.searchParams,
     );
+    const perPage = 48;
 
     const where = getFilter({ q, type, rating, author });
 
-    const entries = Entry.getAll(where);
+    const entries = Entry.getAll(perPage, page, where);
+    const count = Entry.count();
+    const totalPages = count / 48;
 
     const requestHeaders = req.headers.get("accept");
     const isRequestingHtml = requestHeaders?.includes("text/html");
@@ -56,7 +56,7 @@ export const handler: Handlers<Props> = {
       {
         entries,
         page,
-        totalPages: 1,
+        totalPages,
         authors,
       },
     );
@@ -190,7 +190,7 @@ export default function Entries(props: PageProps<Props>) {
 }
 
 function getFilter(
-  { q, type, rating, author }: SearchParams,
+  { q, type, rating, author }: Omit<SearchParams, "page">,
 ): Where<keyof EntryData> | null {
   const filters = [];
   const args = {} as Where<keyof EntryData>["args"];
