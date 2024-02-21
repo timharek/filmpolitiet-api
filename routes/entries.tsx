@@ -14,7 +14,6 @@ interface Props {
   authors: Author[];
   page: number;
   totalPages: number;
-  filterPreview?: string;
 }
 
 const searchParamsSchema = zfd.formData({
@@ -59,7 +58,6 @@ export const handler: Handlers<Props> = {
         page,
         totalPages: 1,
         authors,
-        filterPreview: where ? `filter=(${where})` : undefined,
       },
     );
   },
@@ -106,15 +104,12 @@ export default function Entries(props: PageProps<Props>) {
         <p class="my-6">
           Here be dragons!
         </p>
-        {data.filterPreview && (
+        {url.searchParams.size > 0 && (
           <details>
             <summary>API filter preview</summary>
-
             <div class="p-4 bg-slate-800 text-white select-all rounded">
               <code class="">
-                curl -X GET "https://filmpolitiet.wyd.no/api/entries" \
-                <br />
-                -d "{data.filterPreview.replaceAll('"', "'")}"
+                curl -X GET "{url.toString()}"
               </code>
             </div>
           </details>
