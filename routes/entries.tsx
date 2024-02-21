@@ -4,7 +4,7 @@ import { PageProps } from "$fresh/src/server/types.ts";
 import { Card } from "../components/Card.tsx";
 import { Select, SelectOption } from "../components/Select.tsx";
 import { Author } from "../src/db/models/author.ts";
-import { Entry } from "../src/db/models/entry.ts";
+import { Entry, EntryData } from "../src/db/models/entry.ts";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { ENTRY_TYPE, Where } from "../src/db.ts";
@@ -39,7 +39,6 @@ export const handler: Handlers<Props> = {
     );
 
     const where = getFilter({ q, type, rating, author });
-    console.log("filter", where);
 
     const entries = Entry.getAll(where);
     const authors = Author.getAll();
@@ -185,17 +184,19 @@ export default function Entries(props: PageProps<Props>) {
   );
 }
 
-function getFilter({ q, type, rating, author }: SearchParams): Where | null {
+function getFilter(
+  { q, type, rating, author }: SearchParams,
+): Where<keyof EntryData> | null {
   const filters = [];
-  const args: Where["args"] = {};
+  const args = {} as Where<keyof EntryData>["args"];
 
   if (q) {
     filters.push(`name~"${q}"`);
   }
 
   if (type) {
-    filters.push(`typeId = :type`);
-    args.type = ENTRY_TYPE[type];
+    filters.push(`typeId = :typeId`);
+    args.typeId = ENTRY_TYPE[type];
   }
 
   if (rating) {

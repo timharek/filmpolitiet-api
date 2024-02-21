@@ -1,7 +1,7 @@
 import { db, Where } from "../../db.ts";
 import { Author } from "./author.ts";
 
-type EntryData = {
+export type EntryData = {
   id: string;
   filmpolitietId: string;
   title: string;
@@ -39,7 +39,7 @@ export class Entry {
   /**
    * TODO: Add filter
    */
-  public static getAll(where?: Where | null): Entry[] {
+  public static getAll(where?: Where<keyof EntryData> | null): Entry[] {
     const entries: Entry[] = [];
     let result: EntryData[];
     result = db.queryEntries<EntryData>(

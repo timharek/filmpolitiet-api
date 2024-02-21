@@ -41,7 +41,7 @@ export const ENTRY_TYPE: Record<string, number> = {
   game: 3,
 };
 
-export type Where = {
+export type Where<T extends string> = {
   string: string;
-  args: Record<string, string | number>;
+  args: Record<T, string | number>;
 };
