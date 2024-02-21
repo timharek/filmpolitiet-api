@@ -37,9 +37,10 @@ export async function scrape(
     const url = getEntryUrl(entry);
     const author = await getAuthor(url, isOverwriting);
     if (!author) {
-      throw new Error("Missing author.");
+      console.error("Missing author.");
+      continue;
     }
-    const parsedEntry = parseEntry({
+    const parsedEntry = await parseEntry({
       entry,
       rating,
       typeId: Entry.getType(type)?.id ?? 1,
@@ -52,6 +53,7 @@ export async function scrape(
   for await (const entry of parsedEntries) {
     if (isOverwriting) {
       // TODO: Add upcate method
+      Entry.create(entry);
       continue;
     }
     Entry.create(entry);
@@ -70,7 +72,13 @@ export async function scrape(
 async function getPageDoc(
   url: string | URL,
 ): Promise<HTMLDocument | null> {
-  const page = await fetch(url).then((res) => res.text());
+  const page = await fetch(url).then((res) => res.text()).catch((_error) =>
+    null
+  );
+  if (!page) {
+    console.error("url failed:", url);
+    return null;
+  }
   await sleep(1000);
   return new DOMParser().parseFromString(page, "text/html");
 }
@@ -79,27 +87,55 @@ function getEntries(pageDocument: HTMLDocument): Element[] {
   return pageDocument.getElementsByTagName("article");
 }
 
-function parseEntry(
+async function parseEntry(
   { entry, authorId, rating, typeId }: {
     entry: Element;
     authorId: number;
     rating: number;
     typeId: number;
   },
-): EntryCreateInput {
+): Promise<EntryCreateInput> {
+  const title = entry.querySelector("header h2 a")!.textContent;
+  console.debug("title", title);
+  const coverArtUrl = await getCoverArt(entry) ?? "";
+  console.debug("coverArtUrl", coverArtUrl);
   return {
     filmpolitietId: entry.attributes.getNamedItem("id")!.value,
-    title: entry.querySelector("header h2 a")!.textContent,
+    title,
     url: getEntryUrl(entry),
-    reviewDate: entry.querySelector("header time")!.attributes.getNamedItem(
-      "datetime",
-    )!.value,
+    reviewDate: await getReviewDate(entry),
     authorId,
     rating,
     typeId,
-    coverArtUrl: entry.querySelector(".coverart")?.attributes
-      .getNamedItem("src")?.value ?? "",
+    coverArtUrl,
   };
+}
+
+async function getCoverArt(entry: Element): Promise<string | null> {
+  const url = getEntryUrl(entry);
+
+  const entryPageDom = await getPageDoc(url);
+
+  if (!entryPageDom) {
+    return null;
+  }
+  return entryPageDom.querySelector(".coverart")?.attributes.getNamedItem(
+    "src",
+  )?.value ?? null;
+}
+
+async function getReviewDate(entry: Element): Promise<string> {
+  const url = getEntryUrl(entry);
+
+  const entryPageDom = await getPageDoc(url);
+
+  if (!entryPageDom) {
+    throw new Error("Entry doesn't exit.");
+  }
+
+  return entryPageDom.querySelector(".post time")?.attributes.getNamedItem(
+    "datetime",
+  )?.value ?? "1970-01-01";
 }
 
 function getEntryUrl(entry: Element): string {

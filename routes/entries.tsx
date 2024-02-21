@@ -39,7 +39,6 @@ export const handler: Handlers<Props> = {
     );
 
     const where = getFilter({ q, type, rating, author });
-    console.log("where", where);
 
     const entries = Entry.getAll(where);
     const authors = Author.getAll();
