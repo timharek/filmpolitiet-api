@@ -41,6 +41,16 @@ export const handler: Handlers<Props> = {
     const where = getFilter({ q, type, rating, author });
 
     const entries = Entry.getAll(where);
+
+    const requestHeaders = req.headers.get("accept");
+    const isRequestingHtml = requestHeaders?.includes("text/html");
+
+    if (!isRequestingHtml) {
+      const headers = new Headers();
+      headers.set("content-type", "application/json");
+      return new Response(JSON.stringify(entries), { headers });
+    }
+
     const authors = Author.getAll();
 
     return await ctx.render(
