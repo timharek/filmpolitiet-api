@@ -1,4 +1,4 @@
-import { db } from "../../db.ts";
+import { db, Where } from "../../db.ts";
 import { Author } from "./author.ts";
 
 type EntryData = {
@@ -39,11 +39,18 @@ export class Entry {
   /**
    * TODO: Add filter
    */
-  public static getAll(): Entry[] {
+  public static getAll(where?: Where | null): Entry[] {
     const entries: Entry[] = [];
-    const result = db.queryEntries<EntryData>(
+    let result: EntryData[];
+    result = db.queryEntries<EntryData>(
       "SELECT * FROM entry",
     );
+    if (where) {
+      result = db.queryEntries<EntryData>(
+        `SELECT * FROM entry WHERE ${where.string}`,
+        where.args,
+      );
+    }
 
     for (const entry of result) {
       entries.push(new Entry(entry));

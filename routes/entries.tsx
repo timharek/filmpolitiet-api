@@ -5,6 +5,9 @@ import { Card } from "../components/Card.tsx";
 import { Select, SelectOption } from "../components/Select.tsx";
 import { Author } from "../src/db/models/author.ts";
 import { Entry } from "../src/db/models/entry.ts";
+import { zfd } from "zod-form-data";
+import { z } from "zod";
+import { ENTRY_TYPE, Where } from "../src/db.ts";
 
 interface Props {
   entries: Entry[];
@@ -14,6 +17,15 @@ interface Props {
   filterPreview?: string;
 }
 
+const searchParamsSchema = zfd.formData({
+  q: zfd.text(z.string().optional()),
+  type: zfd.text(z.enum(["movie", "show", "game"]).optional()),
+  rating: zfd.numeric(z.number().min(1).max(6).optional()),
+  author: zfd.numeric(z.number().optional()),
+});
+
+type SearchParams = z.infer<typeof searchParamsSchema>;
+
 export const handler: Handlers<Props> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
@@ -21,21 +33,15 @@ export const handler: Handlers<Props> = {
       ? Number(url.searchParams.get("page"))
       : 1;
     const perPage = 48;
-    const search = url.searchParams.has("q")
-      ? url.searchParams.get("q") as string
-      : undefined;
-    const type = url.searchParams.has("type")
-      ? url.searchParams.get("type") as string
-      : undefined;
-    const rating = url.searchParams.has("rating")
-      ? url.searchParams.get("rating") as string
-      : undefined;
-    const author = url.searchParams.has("author")
-      ? url.searchParams.get("author") as string
-      : undefined;
-    const filter = getFilter({ search, type, rating, author });
 
-    const entries = Entry.getAll();
+    const { q, type, rating, author } = searchParamsSchema.parse(
+      url.searchParams,
+    );
+
+    const where = getFilter({ q, type, rating, author });
+    console.log("filter", where);
+
+    const entries = Entry.getAll(where);
     const authors = Author.getAll();
 
     return await ctx.render(
@@ -44,7 +50,7 @@ export const handler: Handlers<Props> = {
         page,
         totalPages: 1,
         authors,
-        filterPreview: filter ? `filter=(${filter})` : undefined,
+        filterPreview: where ? `filter=(${where})` : undefined,
       },
     );
   },
@@ -179,33 +185,33 @@ export default function Entries(props: PageProps<Props>) {
   );
 }
 
-interface Filter {
-  search?: string;
-  type?: string;
-  rating?: string;
-  author?: string;
-}
+function getFilter({ q, type, rating, author }: SearchParams): Where | null {
+  const filters = [];
+  const args: Where["args"] = {};
 
-function getFilter({ search, type, rating, author }: Filter) {
-  const filterArray = [];
-
-  if (search) {
-    filterArray.push(`name~"${search}"`);
+  if (q) {
+    filters.push(`name~"${q}"`);
   }
 
   if (type) {
-    filterArray.push(`type.name="${type}"`);
+    filters.push(`typeId = :type`);
+    args.type = ENTRY_TYPE[type];
   }
 
   if (rating) {
-    filterArray.push(`rating="${rating}"`);
+    filters.push(`rating = :rating`);
+    args.rating = rating;
   }
 
   if (author) {
-    filterArray.push(`author.id="${author}"`);
+    filters.push(`authorId = :authorId`);
+    args.authorId = author;
   }
 
-  return filterArray.join(" && ");
+  if (!filters || Object.keys(args).length === 0) {
+    return null;
+  }
+  return { string: filters.join(" AND "), args };
 }
 
 function setPage(url: URL, newPage: number | false) {

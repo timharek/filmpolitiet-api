@@ -34,3 +34,14 @@ db.execute(`
       FOREIGN KEY (typeId) REFERENCES entryType(id)
     );
 `);
+
+export const ENTRY_TYPE: Record<string, number> = {
+  movie: 1,
+  show: 2,
+  game: 3,
+};
+
+export type Where = {
+  string: string;
+  args: Record<string, string | number>;
+};
