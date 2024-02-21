@@ -1,7 +1,8 @@
-import PocketBase from "pb";
 import { parse } from "https://deno.land/x/xml@2.0.4/mod.ts";
-import { getAuthor, getCoverArt, getType, inputTypeEnum } from "./scrape.ts";
+import { getAuthor, getCoverArtUrl, inputTypeEnum } from "./scrape.ts";
 import { Status } from "$fresh/server.ts";
+import { Entry } from "./db/models/entry.ts";
+import { EntryCreateInput } from "./db/models/entry.ts";
 
 interface FeedItem {
   title: string;
@@ -9,6 +10,9 @@ interface FeedItem {
   comments: string;
   category: string | string[];
   pubDate: string;
+  "post-id": {
+    "#text": number;
+  };
 }
 interface Feed {
   xml: string;
@@ -22,18 +26,17 @@ interface Feed {
 
 interface ScrapeRSSProps {
   feedUrl: URL | string;
-  pb: PocketBase;
 }
 
 export async function scrapeRSS(
-  { feedUrl, pb }: ScrapeRSSProps,
+  { feedUrl }: ScrapeRSSProps,
 ): Promise<Status.Created | Status.InternalServerError> {
   try {
     const feed = await fetch(feedUrl).then((res) => res.text());
     const items = getItems(feed);
 
     for (const item of items) {
-      await resolveItem(pb, item);
+      await resolveItem(item);
     }
     return Status.Created;
   } catch (error) {
@@ -94,45 +97,42 @@ function getTypeFromString(string: string): "show" | "movie" | "game" {
   return inputType as "show" | "movie" | "game";
 }
 
-async function parseItem(item: FeedItem) {
-  const parsedItem = new FormData();
-  //parsedEntryMap.set("filmpolitietId", "TODO");
-  parsedItem.set("url", item.link);
-  parsedItem.set("name", item.title);
-  parsedItem.set("reviewDate", new Date(item.pubDate).toISOString());
-  const coverArtBlob = await getCoverArt(item.link);
-  if (coverArtBlob) {
-    parsedItem.set(
-      "coverArt",
-      coverArtBlob,
-      `${parsedItem.get("name")}.jpg`,
-    );
-  }
-  return parsedItem;
+async function parseItem(
+  { item, authorId, rating, typeId }: {
+    item: FeedItem;
+    authorId: number;
+    rating: number;
+    typeId: number;
+  },
+): Promise<EntryCreateInput> {
+  const url = item.link;
+  const coverArtUrl = await getCoverArtUrl(url);
+
+  return {
+    filmpolitietId: String(item["post-id"]["#text"]),
+    title: item.title,
+    url,
+    reviewDate: new Date(item.pubDate).toISOString(),
+    coverArtUrl: coverArtUrl ?? "",
+    authorId,
+    rating,
+    typeId,
+  };
 }
 
-async function resolveItem(pb: PocketBase, item: FeedItem) {
+async function resolveItem(item: FeedItem) {
   const { rating, type: typeString } = getRatingAndType(item);
-  const type = await getType(pb, typeString);
-  try {
-    await pb.collection("entry").getFirstListItem(`url="${item.link}"`);
-  } catch (_error) {
-    console.log(`Item: ${item.title} doesn't exist -> Adding...`);
-    const parsedItem = await parseItem(item);
-    parsedItem.set("rating", rating.toString());
-    parsedItem.set("type", type.id);
-    const isOverwriting = true;
-    const author = await getAuthor(pb, item.link, isOverwriting);
-    if (author) {
-      parsedItem.set("author", author.id);
-    }
-    try {
-      await pb.collection("entry").create(parsedItem);
-    } catch (error) {
-      console.error(`Couldn't create ${item.title}`);
-      console.error(error);
-    }
-  }
+  const type = Entry.getType(typeString);
+  if (!type) throw new Error("Missing type");
+  const author = await getAuthor(item.link, true);
+  if (!author) throw new Error("Missing author");
+  const parsedItem = await parseItem({
+    item,
+    rating,
+    typeId: type.id,
+    authorId: author.id,
+  });
+  Entry.create(parsedItem);
 }
 
 export const forTestingOnly = {

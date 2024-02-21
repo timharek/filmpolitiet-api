@@ -1,5 +1,4 @@
 import "$std/dotenv/load.ts";
-import PocketBase from "pb";
 import { HandlerContext, Status } from "$fresh/server.ts";
 import { scrapeRSS } from "../../src/scrape_rss.ts";
 
@@ -12,14 +11,7 @@ export const handler = async (
       "https://p3.no/category/filmpolitiet-anmelder/feed/",
     );
 
-    const pb = new PocketBase(
-      Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
-    );
-    const username = Deno.env.get("PB_ADMIN_USERNAME")!;
-    const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
-    await pb.admins.authWithPassword(username, password);
-
-    await scrapeRSS({ feedUrl, pb });
+    await scrapeRSS({ feedUrl });
     return new Response(JSON.stringify({ message: "sucess!" }), {
       status: Status.OK,
     });

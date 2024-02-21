@@ -1,25 +1,25 @@
 import "$std/dotenv/load.ts";
-import PocketBase from "pb";
 import {
   DOMParser,
   Element,
   HTMLDocument,
 } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 import { Status } from "$fresh/server.ts";
+import { Author, AuthorCreateInput } from "./db/models/author.ts";
+import { EntryCreateInput } from "./db/models/entry.ts";
+import { Entry } from "./db/models/entry.ts";
 
 interface ScrapeProps {
-  pb: PocketBase;
   url: URL | string;
   isRecursive?: boolean;
   isOverwriting?: boolean;
 }
 
 export async function scrape(
-  { pb, url, isRecursive, isOverwriting = true }: ScrapeProps,
+  { url, isRecursive, isOverwriting = true }: ScrapeProps,
 ): Promise<Status.Created | Status.NoContent | Status.NotFound> {
   const rating = getRatingFromUrl(url);
-  const inputType = getTypeFromUrl(url);
-  const type = await getType(pb, inputType);
+  const type = getTypeFromUrl(url);
 
   const pageDocument = await getPageDoc(url);
   if (!pageDocument) {
@@ -34,56 +34,42 @@ export async function scrape(
   const parsedEntries = [];
 
   for (const entry of entries) {
-    const parsedEntry = parseEntry(entry);
-    const url = parsedEntry.get("url") as string;
-    const coverArtBlob = await getCoverArt(url);
-    if (coverArtBlob) {
-      parsedEntry.set(
-        "coverArt",
-        coverArtBlob,
-        `${parsedEntry.get("name")}.jpg`,
-      );
+    const url = getEntryUrl(entry);
+    const author = await getAuthor(url, isOverwriting);
+    if (!author) {
+      throw new Error("Missing author.");
     }
-    parsedEntry.set("type", type.id);
-    parsedEntry.set("rating", String(rating));
-    const author = await getAuthor(pb, url, isOverwriting);
-    if (author) {
-      parsedEntry.set("author", author.id);
-    }
+    const parsedEntry = parseEntry({
+      entry,
+      rating,
+      typeId: Entry.getType(type)?.id ?? 1,
+      authorId: author.id,
+    });
 
     parsedEntries.push(parsedEntry);
   }
 
   for await (const entry of parsedEntries) {
-    try {
-      await pb.collection("entry").create(entry);
-    } catch (_error) {
-      if (isOverwriting) {
-        try {
-          console.error("could not create");
-          const existingEntry = await pb.collection("entry").getFirstListItem<
-            App.Entry
-          >(`name="${entry.get("name")}"`);
-
-          await pb.collection("entry").update(existingEntry.id, entry);
-        } catch (_error) {
-          console.error("could not update");
-        }
-      }
+    if (isOverwriting) {
+      // TODO: Add upcate method
+      continue;
     }
+    Entry.create(entry);
   }
 
   const nextPage = pageDocument.querySelector(".post-previous a")?.attributes
     .getNamedItem("href")?.value;
   if (isRecursive && nextPage) {
     console.debug("is recursive and has next page");
-    await scrape({ pb, url: nextPage, isRecursive: true });
+    await scrape({ url: nextPage, isRecursive: true });
   }
 
   return Status.Created;
 }
 
-async function getPageDoc(url: string | URL): Promise<HTMLDocument | null> {
+async function getPageDoc(
+  url: string | URL,
+): Promise<HTMLDocument | null> {
   const page = await fetch(url).then((res) => res.text());
   await sleep(1000);
   return new DOMParser().parseFromString(page, "text/html");
@@ -93,107 +79,70 @@ function getEntries(pageDocument: HTMLDocument): Element[] {
   return pageDocument.getElementsByTagName("article");
 }
 
-function parseEntry(entry: Element) {
-  const parsedEntryMap = new FormData();
-  parsedEntryMap.set(
-    "filmpolitietId",
-    entry.attributes.getNamedItem("id")?.value as string,
-  );
-  parsedEntryMap.set(
-    "url",
-    entry.querySelector("header h2 a")?.attributes
-      .getNamedItem("href")
-      ?.value as string,
-  );
-  parsedEntryMap.set(
-    "name",
-    entry.querySelector("header h2 a")?.textContent as string,
-  );
-  parsedEntryMap.set(
-    "reviewDate",
-    entry.querySelector("header time")?.attributes.getNamedItem("datetime")
-      ?.value as string,
-  );
-  return parsedEntryMap;
+function parseEntry(
+  { entry, authorId, rating, typeId }: {
+    entry: Element;
+    authorId: number;
+    rating: number;
+    typeId: number;
+  },
+): EntryCreateInput {
+  return {
+    filmpolitietId: entry.attributes.getNamedItem("id")!.value,
+    title: entry.querySelector("header h2 a")!.textContent,
+    url: getEntryUrl(entry),
+    reviewDate: entry.querySelector("header time")!.attributes.getNamedItem(
+      "datetime",
+    )!.value,
+    authorId,
+    rating,
+    typeId,
+    coverArtUrl: entry.querySelector(".coverart")?.attributes
+      .getNamedItem("src")?.value ?? "",
+  };
 }
 
-export async function getType(pb: PocketBase, type: string) {
-  return await pb.collection("type").getFirstListItem<App.Type>(
-    `name="${type}"`,
-  );
+function getEntryUrl(entry: Element): string {
+  return entry.querySelector("header h2 a")!.attributes
+    .getNamedItem("href")!.value;
 }
 
 export async function getAuthor(
-  pb: PocketBase,
   entryUrl: URL | string,
   isOverwriting = true,
-): Promise<App.Author | undefined> {
+): Promise<Author | null> {
   const entryPage = await getPageDoc(entryUrl);
 
-  if (entryPage) {
-    const authorWrapper = entryPage.querySelector(".author-wrap");
-    const authorNameWrapper = authorWrapper?.querySelector(".b_skribent a");
-
-    const formData = new FormData();
-    formData.set("name", authorNameWrapper?.textContent as string);
-    formData.set(
-      "email",
-      authorWrapper?.querySelector(".b_epost")?.textContent as string,
-    );
-    formData.set(
-      "url",
-      authorNameWrapper?.attributes.getNamedItem("href")?.value as string,
-    );
-
-    try {
-      await pb.collection("filmpolitiet_author").create(formData);
-    } catch (_error) {
-      if (isOverwriting) {
-        console.error("could not create new author, trying to update");
-        try {
-          const existingAuthor = await pb.collection("filmpolitiet_author")
-            .getFirstListItem<App.Author>(`name="${formData.get("name")}"`);
-          await pb.collection("filmpolitiet_author").update(
-            existingAuthor.id,
-            formData,
-          );
-        } catch (_error) {
-          console.error("could not create or update author");
-        }
-      }
-    }
-
-    const author = await pb.collection("filmpolitiet_author").getFirstListItem<
-      App.Author
-    >(`name="${formData.get("name")}"`);
-    return author ? author : undefined;
+  if (!entryPage) {
+    return null;
   }
+  const authorWrapper = entryPage.querySelector(".author-wrap");
+  const authorNameWrapper = authorWrapper?.querySelector(".b_skribent a");
+
+  const authorInput: AuthorCreateInput = {
+    fullName: authorNameWrapper!.textContent,
+    email: authorWrapper!.querySelector(".b_epost")!.textContent,
+    url: authorNameWrapper!.attributes.getNamedItem("href")!.value,
+  };
+
+  const author = Author.create(authorInput);
+  if (!author) {
+    throw new Error("Failed to create new author");
+  }
+  if (isOverwriting) {
+    // TODO: Update author
+  }
+
+  return author;
 }
 
-export async function getCoverArt(
-  entryUrl: URL | string,
-): Promise<Blob | undefined> {
-  const entryPage = await getPageDoc(entryUrl);
-
-  if (entryPage) {
-    const coverArtUrlString = entryPage.querySelector(".coverart")?.attributes
-      .getNamedItem("src")?.value as string;
-    if (!coverArtUrlString) {
-      return undefined;
-    }
-    try {
-      const coverArtUrl = coverArtUrlString.split("?src=")[1];
-      console.debug(coverArtUrl);
-      const coverArtResponse = await fetch(coverArtUrl.split("&")[0]);
-      await sleep(1000);
-      const coverArtBinary = await coverArtResponse.blob();
-
-      return coverArtBinary;
-    } catch (_error) {
-      console.error("could not get cover-art");
-      return undefined;
-    }
+export async function getCoverArtUrl(url: string): Promise<string | null> {
+  const entryPage = await getPageDoc(url);
+  if (!entryPage) {
+    return null;
   }
+  return entryPage.querySelector(".coverart")?.attributes
+    .getNamedItem("src")?.value as string;
 }
 
 function getRatingFromUrl(url: URL | string): number {

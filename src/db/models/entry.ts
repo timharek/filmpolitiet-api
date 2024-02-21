@@ -13,7 +13,12 @@ type EntryData = {
   authorId: number;
 };
 
-type EntryCreateInput = { id?: number } & Omit<EntryData, "id">;
+export type EntryCreateInput = { id?: number } & Omit<EntryData, "id">;
+
+type EntryType = {
+  id: number;
+  title: string;
+};
 
 export class Entry {
   private constructor(private data: EntryData) {}
@@ -31,9 +36,22 @@ export class Entry {
     return new Entry(result[0]);
   }
 
+  public static getType(title: string): EntryType | null {
+    const result = db.queryEntries<EntryType>(
+      "SELECT * FROM entryType WHERE title = :title",
+      { title },
+    );
+
+    if (result.length === 0 || !result[0]) {
+      return null;
+    }
+
+    return result[0];
+  }
+
   public static getByFId(id: string): Entry | null {
     const result = db.queryEntries<EntryData>(
-      "SELECT * FROM entry WHERE filmpolitietId = :id",
+      "SELECT * FROM entry WHERE filmpolitietId = :id;",
       { id },
     );
 
@@ -70,6 +88,7 @@ export class Entry {
 
     return result[0].title;
   }
+
   get author(): Author {
     const author = Author.get(this.data.authorId);
     if (!author) throw new Error("Missing author. Not possible.");

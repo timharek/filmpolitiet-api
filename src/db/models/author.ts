@@ -1,13 +1,13 @@
 import { db } from "../../db.ts";
 
 type AuthorData = {
-  id: string;
+  id: number;
   fullName: string;
   email: string;
   url: string;
 };
 
-type AuthorCreateInput = { id?: number } & Omit<AuthorData, "id">;
+export type AuthorCreateInput = { id?: number } & Omit<AuthorData, "id">;
 
 export class Author {
   private constructor(private data: AuthorData) {}
@@ -42,17 +42,18 @@ export class Author {
     const existing = this.getByEmail(data.email);
     if (existing) return existing;
 
-    const created = db.queryEntries<AuthorData>(
+    db.queryEntries<AuthorData>(
       `INSERT INTO author (fullName, email, url) VALUES
         (:fullName, :email, :url);
       `,
       data,
     );
+    const created = this.getByEmail(data.email);
+    if (!created) return null;
+    return created;
+  }
 
-    if (created.length === 0 || !created[0]) {
-      return null;
-    }
-
-    return new Author(created[0]);
+  get id() {
+    return this.data.id;
   }
 }
