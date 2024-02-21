@@ -67,10 +67,9 @@ export default function Entries(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
 
-  const type = url.searchParams.get("type");
-  const rating = url.searchParams.get("rating");
-  const author = url.searchParams.get("author");
-  const search = url.searchParams.get("q");
+  const { q: search, type, author, rating } = searchParamsSchema.parse(
+    url.searchParams,
+  );
 
   const types: SelectOption[] = [
     { value: "movie", label: "Movie" },
@@ -120,19 +119,19 @@ export default function Entries(props: PageProps<Props>) {
               label="Type"
               name="type"
               options={types}
-              defaultValue={type as string}
+              defaultValue={type ?? ""}
             />
             <Select
               label="Rating"
               name="rating"
               options={ratings}
-              defaultValue={rating as string}
+              defaultValue={String(rating) ?? ""}
             />
             <Select
               label="Author"
               name="author"
               options={authorOptions}
-              defaultValue={author as string}
+              defaultValue={String(author) ?? ""}
             />
           </div>
           <div class="flex gap-2">
@@ -143,7 +142,7 @@ export default function Entries(props: PageProps<Props>) {
               name="q"
               placeholder="Search for movies, tv shows or games"
               class="border w-full p-2 rounded text-black"
-              defaultValue={search as string}
+              defaultValue={search ?? ""}
             />
             <button
               type="submit"
@@ -153,8 +152,9 @@ export default function Entries(props: PageProps<Props>) {
             </button>
           </div>
         </form>
-        {data.entries.length === 0 &&
-          <p class="">No results. Check back later.</p>}
+        {data.entries.length === 0 && (
+          <p class="">No results. Check back later.</p>
+        )}
         {data.entries.length > 0 && (
           <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             {data.entries.map((entry) => (
