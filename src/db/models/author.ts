@@ -26,7 +26,7 @@ export class Author {
   }
 
   /**
-   * TODO: Add filter
+   * TODO: Add filter. https://todo.sr.ht/~timharek/filmpolitiet-api/4
    */
   public static getAll(): Author[] {
     const authors: Author[] = [];

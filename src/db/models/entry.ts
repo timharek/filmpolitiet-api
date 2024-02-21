@@ -36,9 +36,6 @@ export class Entry {
     return new Entry(result[0]);
   }
 
-  /**
-   * TODO: Add filter
-   */
   public static getAll(where?: Where<keyof EntryData> | null): Entry[] {
     const entries: Entry[] = [];
     let result: EntryData[];

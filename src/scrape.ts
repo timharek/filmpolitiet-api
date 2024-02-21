@@ -52,7 +52,7 @@ export async function scrape(
 
   for await (const entry of parsedEntries) {
     if (isOverwriting) {
-      // TODO: Add upcate method
+      // TODO: Add upcate method. https://todo.sr.ht/~timharek/filmpolitiet-api/5
       Entry.create(entry);
       continue;
     }
@@ -166,7 +166,7 @@ export async function getAuthor(
     throw new Error("Failed to create new author");
   }
   if (isOverwriting) {
-    // TODO: Update author
+    // TODO: Update author. https://todo.sr.ht/~timharek/filmpolitiet-api/6
   }
 
   return author;
