@@ -36,6 +36,7 @@ export class Entry {
     return new Entry(result[0]);
   }
 
+  // TODO: Add pagintion. https://todo.sr.ht/~timharek/filmpolitiet-api/1
   public static getAll(where?: Where<keyof EntryData> | null): Entry[] {
     const entries: Entry[] = [];
     let result: EntryData[];
