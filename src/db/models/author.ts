@@ -25,6 +25,20 @@ export class Author {
     return new Author(result[0]);
   }
 
+  /**
+   * TODO: Add filter
+   */
+  public static getAll(): Author[] {
+    const authors: Author[] = [];
+    const result = db.queryEntries<AuthorData>("SELECT * FROM author");
+
+    for (const author of result) {
+      authors.push(new Author(author));
+    }
+
+    return authors;
+  }
+
   public static getByEmail(email: string): Author | null {
     const result = db.queryEntries<AuthorData>(
       "SELECT * FROM author WHERE email = :email",
@@ -55,5 +69,9 @@ export class Author {
 
   get id() {
     return this.data.id;
+  }
+
+  get fullName() {
+    return this.data.fullName;
   }
 }

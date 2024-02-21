@@ -1,44 +1,24 @@
-import PocketBase from "pb";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import { sort } from "https://deno.land/std@0.178.0/semver/mod.ts";
+import { Author } from "../src/db/models/author.ts";
 
 interface Props {
-  authors: App.Author[];
+  authors: Author[];
   page: number;
   totalPages: number;
 }
 
-export const handler: Handlers = {
+export const handler: Handlers<Props> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
     const page = url.searchParams.has("page")
       ? Number(url.searchParams.get("page"))
       : 1;
-    const perPage = 48;
-    const pb = new PocketBase(
-      Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
-    );
-    const username = Deno.env.get("PB_ADMIN_USERNAME")!;
-    const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
-    await pb.admins.authWithPassword(username, password);
 
-    const authorsResult = await pb.collection("filmpolitiet_author").getList<
-      App.Author
-    >(
-      page,
-      perPage,
-      { sort: "name" },
-    );
+    const authors = Author.getAll();
 
-    return await ctx.render(
-      {
-        authors: authorsResult.items,
-        page,
-        totalPages: authorsResult.totalPages,
-      } as Props,
-    );
+    return await ctx.render({ authors, page, totalPages: 1 });
   },
 };
 
@@ -66,7 +46,7 @@ export default function Reviewers(props: PageProps<Props>) {
             {data.authors.map((author) => (
               <li>
                 <a href={`/entries?author=${author.id}`} class="underline">
-                  {author.name}
+                  {author.fullName}
                 </a>
               </li>
             ))}
