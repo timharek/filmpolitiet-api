@@ -7,10 +7,10 @@ type EntryData = {
   title: string;
   url: string;
   rating: number;
-  coverArtUrl: string;
   reviewDate: string;
   typeId: number;
   authorId: number;
+  coverArtUrl?: string;
 };
 
 export type EntryCreateInput = { id?: number } & Omit<EntryData, "id">;
@@ -34,6 +34,22 @@ export class Entry {
     }
 
     return new Entry(result[0]);
+  }
+
+  /**
+   * TODO: Add filter
+   */
+  public static getAll(): Entry[] {
+    const entries: Entry[] = [];
+    const result = db.queryEntries<EntryData>(
+      "SELECT * FROM entry",
+    );
+
+    for (const entry of result) {
+      entries.push(new Entry(entry));
+    }
+
+    return entries;
   }
 
   public static getType(title: string): EntryType | null {
@@ -93,5 +109,30 @@ export class Entry {
     const author = Author.get(this.data.authorId);
     if (!author) throw new Error("Missing author. Not possible.");
     return author;
+  }
+
+  get reviewDate(): Date {
+    return new Date(this.data.reviewDate);
+  }
+
+  get url(): URL {
+    return new URL(this.data.url);
+  }
+
+  get rating(): number {
+    return this.data.rating;
+  }
+
+  get coverArtUrl(): URL | null {
+    if (!this.data.coverArtUrl) return null;
+    if (this.data.coverArtUrl.startsWith("https")) {
+      return new URL(this.data.coverArtUrl);
+    }
+
+    return new URL(`https:${this.data.coverArtUrl}`);
+  }
+
+  get title(): string {
+    return this.data.title;
   }
 }

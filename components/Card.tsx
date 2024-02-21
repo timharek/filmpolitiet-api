@@ -1,10 +1,11 @@
+import { Entry } from "../src/db/models/entry.ts";
 import { Dice } from "./Dice.tsx";
 
 interface CardProps {
-  entry: App.Entry;
+  entry: Entry;
 }
 export function Card({ entry }: CardProps) {
-  const reviewDate = new Date(entry.reviewDate);
+  const reviewDate = entry.reviewDate;
   return (
     <div>
       <a
@@ -18,23 +19,23 @@ export function Card({ entry }: CardProps) {
           />
         </div>
         <div class="absolute z-20 top-0 right-0 px-2 py-1 bg-primary text-black uppercase font-semibold rounded-bl">
-          {entry.expand.type.name}
+          {entry.type}
         </div>
-        {entry.coverArt &&
+        {entry.coverArtUrl &&
           (
             <img
-              src={entry.coverArt}
+              src={entry.coverArtUrl.toString()}
               class="group-hover:scale-105 object-cover w-full h-full transition-all"
               alt=""
             />
           )}
       </a>
-      <h2 class="font-semibold select-all">{entry.name}</h2>
+      <h2 class="font-semibold select-all">{entry.title}</h2>
       <time dateTime={reviewDate.toISOString()} class="italic">
         Reviewed: {reviewDate.toISOString().split("T")[0]}
       </time>
       <p class="">
-        Author: <span class="select-all">{entry.expand.author.name}</span>
+        Author: <span class="select-all">{entry.author.fullName}</span>
       </p>
     </div>
   );

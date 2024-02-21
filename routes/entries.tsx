@@ -1,19 +1,20 @@
-import PocketBase from "pb";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
 import { Card } from "../components/Card.tsx";
 import { Select, SelectOption } from "../components/Select.tsx";
+import { Author } from "../src/db/models/author.ts";
+import { Entry } from "../src/db/models/entry.ts";
 
 interface Props {
-  entries: App.Entry[];
-  authors: App.Author[];
+  entries: Entry[];
+  authors: Author[];
   page: number;
   totalPages: number;
   filterPreview?: string;
 }
 
-export const handler: Handlers = {
+export const handler: Handlers<Props> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
     const page = url.searchParams.has("page")
@@ -33,39 +34,18 @@ export const handler: Handlers = {
       ? url.searchParams.get("author") as string
       : undefined;
     const filter = getFilter({ search, type, rating, author });
-    const pb = new PocketBase(
-      Deno.env.get("PB_URL") || "http://127.0.0.1:8090",
-    );
-    const username = Deno.env.get("PB_ADMIN_USERNAME")!;
-    const password = Deno.env.get("PB_ADMIN_PASSWORD")!;
-    await pb.admins.authWithPassword(username, password);
 
-    const entriesResult = await pb.collection("entry").getList<App.Entry>(
-      page,
-      perPage,
-      {
-        expand: "author, type",
-        sort: "-reviewDate",
-        filter,
-      },
-    );
-    const authors = await pb.collection("filmpolitiet_author").getFullList<
-      App.Author
-    >({ sort: "name" });
+    const entries = Entry.getAll();
+    const authors = Author.getAll();
 
     return await ctx.render(
       {
-        entries: entriesResult.items.map((item) => {
-          return {
-            ...item,
-            coverArt: pb.getFileUrl(item, item.coverArt),
-          };
-        }),
+        entries,
         page,
-        totalPages: entriesResult.totalPages,
+        totalPages: 1,
         authors,
         filterPreview: filter ? `filter=(${filter})` : undefined,
-      } as Props,
+      },
     );
   },
 };
@@ -90,8 +70,8 @@ export default function Entries(props: PageProps<Props>) {
   }
   const authorOptions: SelectOption[] = data.authors.map((author) => {
     return {
-      value: author.id,
-      label: author.name,
+      value: String(author.id),
+      label: author.fullName,
     };
   });
 
