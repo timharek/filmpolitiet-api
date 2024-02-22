@@ -114,6 +114,20 @@ export class Entry {
     return new Entry(created[0]);
   }
 
+  public static upsert(data: EntryCreateInput): Entry | null {
+    const updated = db.queryEntries<EntryData>(
+      `INSERT OR REPLACE INTO entry (filmpolitietId, title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
+        (:filmpolitietId, :title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
+      `,
+      data,
+    );
+    if (updated.length === 0 || !updated[0]) {
+      return null;
+    }
+
+    return new Entry(updated[0]);
+  }
+
   get type(): string {
     const result = db.queryEntries<{ title: string }>(
       "SELECT title FROM entryType WHERE id = :id",
