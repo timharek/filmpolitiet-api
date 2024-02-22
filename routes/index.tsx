@@ -11,11 +11,22 @@ export default function Home() {
           Filmpolitiets unofficial API
         </h1>
         <p class="my-6">
-          Welcome to Filmpolitiets unofficial API. You can checkout what's been
-          cached <a class="underline" href="/entries">here</a>.
+          Welcome to Filmpolitiets unofficial API.
         </p>
         <p class="my-6">
-          Currently a work in progress, here be dragons.
+          This is currently a work in progress. There are probably some holes in
+          the dateset from Filmpolitiets official archive.
+        </p>
+        <p class="my-6">
+          This application checks their official RSS-feed every 5 minutes.
+        </p>
+        <p class="my-6">
+          Want to contribute? Check out the
+          <a href="https://sr.ht/~timharek/filmpolitiet-api/">source code</a>
+          and our
+          <a href="https://todo.sr.ht/~timharek/filmpolitiet-api">
+            issue-tracker
+          </a>.
         </p>
       </div>
     </>
