@@ -98,6 +98,7 @@ async function parseEntry(
   },
 ): Promise<EntryCreateInput> {
   const title = entry.querySelector("header h2 a")!.textContent;
+  console.debug("title", title);
   const coverArtUrl = await getCoverArt(entry) ?? "";
   return {
     filmpolitietId: entry.attributes.getNamedItem("id")!.value,
@@ -156,9 +157,11 @@ export async function getAuthor(
   const authorNameWrapper = authorWrapper?.querySelector(".b_skribent a");
 
   const authorInput: AuthorCreateInput = {
-    fullName: authorNameWrapper!.textContent,
-    email: authorWrapper!.querySelector(".b_epost")!.textContent,
-    url: authorNameWrapper!.attributes.getNamedItem("href")!.value,
+    fullName: authorNameWrapper?.textContent ?? "Missing",
+    email: authorWrapper?.querySelector(".b_epost")?.textContent ??
+      "missing@missing.org",
+    url: authorNameWrapper?.attributes.getNamedItem("href")?.value ??
+      "https://missing.org",
   };
 
   const author = Author.create(authorInput);
