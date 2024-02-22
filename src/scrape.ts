@@ -8,6 +8,7 @@ import { Status } from "$fresh/server.ts";
 import { Author, AuthorCreateInput } from "./db/models/author.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
 import { Entry } from "./db/models/entry.ts";
+import { ENTRY_TYPE } from "./db.ts";
 
 interface ScrapeProps {
   url: URL | string;
@@ -43,7 +44,7 @@ export async function scrape(
     const parsedEntry = await parseEntry({
       entry,
       rating,
-      typeId: Entry.getType(type)?.id ?? 1,
+      typeId: ENTRY_TYPE[type],
       authorId: author.id,
     });
 
@@ -53,7 +54,8 @@ export async function scrape(
   for await (const entry of parsedEntries) {
     if (isOverwriting) {
       // TODO: Add upcate method. https://todo.sr.ht/~timharek/filmpolitiet-api/5
-      Entry.create(entry);
+      console.log("overwriting");
+      Entry.upsert(entry);
       continue;
     }
     Entry.create(entry);
@@ -96,9 +98,7 @@ async function parseEntry(
   },
 ): Promise<EntryCreateInput> {
   const title = entry.querySelector("header h2 a")!.textContent;
-  console.debug("title", title);
   const coverArtUrl = await getCoverArt(entry) ?? "";
-  console.debug("coverArtUrl", coverArtUrl);
   return {
     filmpolitietId: entry.attributes.getNamedItem("id")!.value,
     title,
@@ -194,15 +194,16 @@ interface InputType {
 export const inputTypeEnum: InputType = {
   "tv-serieanmeldelser": "show",
   "spillanmeldelser": "game",
-  "filmanmeldelser": "movie",
+  "\-filmanmeldelser": "movie",
 };
 
-function getTypeFromUrl(url: URL | string): "show" | "movie" | "game" {
-  const typeRegex = /(tv-serieanmeldelser|spillanmeldelser|filmanmeldelser)/;
+type EntryType = "show" | "movie" | "game";
+function getTypeFromUrl(url: URL | string): EntryType {
+  const typeRegex = /(tv-serieanmeldelser|spillanmeldelser|\-filmanmeldelser)/;
   const typeMatch = url.toString().match(typeRegex);
   const inputTypeMatch = typeMatch ? typeMatch[1] : null;
   const inputType = inputTypeEnum[inputTypeMatch as string];
-  return inputType as "show" | "movie" | "game";
+  return inputType as EntryType;
 }
 
 function sleep(milliseconds: number) {
