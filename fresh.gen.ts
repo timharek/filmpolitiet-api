@@ -4,8 +4,8 @@
 
 import * as $0 from "./routes/[name].tsx";
 import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/auto-scrape.ts";
-import * as $3 from "./routes/api/scrape.ts";
+import * as $2 from "./routes/api/scrape/index.ts";
+import * as $3 from "./routes/api/scrape/rss.ts";
 import * as $4 from "./routes/docs.tsx";
 import * as $5 from "./routes/entries.tsx";
 import * as $6 from "./routes/index.tsx";
@@ -16,8 +16,8 @@ const manifest = {
   routes: {
     "./routes/[name].tsx": $0,
     "./routes/_app.tsx": $1,
-    "./routes/api/auto-scrape.ts": $2,
-    "./routes/api/scrape.ts": $3,
+    "./routes/api/scrape/index.ts": $2,
+    "./routes/api/scrape/rss.ts": $3,
     "./routes/docs.tsx": $4,
     "./routes/entries.tsx": $5,
     "./routes/index.tsx": $6,
