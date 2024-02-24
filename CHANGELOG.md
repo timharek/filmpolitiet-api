@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Miscellaneous Tasks
+
+- Update changelog
+
+## [0.5.3] - 2024-02-24
+
+### Features
+
+- Add result count
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
+### Styling
+
+- Use 6 grid columns
+
 ## [0.5.2] - 2024-02-24
 
 ### Bug Fixes
