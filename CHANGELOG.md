@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.6.3] - 2024-02-24
+
+### Bug Fixes
+
+- Typo again, this time it works
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
+## [0.6.2] - 2024-02-24
 
 ### Bug Fixes
 
