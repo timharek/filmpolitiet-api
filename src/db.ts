@@ -27,9 +27,8 @@ db.execute(`
 
     CREATE TABLE IF NOT EXISTS entry (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
-      filmpolitietId TEXT NOT NULL UNIQUE,
       title TEXT NOT NULL,
-      url TEXT NOT NULL,
+      url TEXT NOT NULL UNIQUE,
       rating INTEGER NOT NULL,
       reviewDate TEXT NOT NULL,
       coverArtUrl TEXT,

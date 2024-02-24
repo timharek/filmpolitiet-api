@@ -101,7 +101,6 @@ async function parseEntry(
   console.debug("title", title);
   const coverArtUrl = await getCoverArt(entry) ?? "";
   return {
-    filmpolitietId: entry.attributes.getNamedItem("id")!.value,
     title,
     url: getEntryUrl(entry),
     reviewDate: await getReviewDate(entry),

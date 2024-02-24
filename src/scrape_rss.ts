@@ -109,7 +109,6 @@ async function parseItem(
   const coverArtUrl = await getCoverArtUrl(url);
 
   return {
-    filmpolitietId: String(item["post-id"]["#text"]),
     title: item.title,
     url,
     reviewDate: new Date(item.pubDate).toISOString(),

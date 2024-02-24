@@ -3,7 +3,6 @@ import { Author } from "./author.ts";
 
 export type EntryData = {
   id: string;
-  filmpolitietId: string;
   title: string;
   url: string;
   rating: number;
@@ -83,10 +82,10 @@ export class Entry {
     return result[0];
   }
 
-  public static getByFId(id: string): Entry | null {
+  public static getByUrl(url: string): Entry | null {
     const result = db.queryEntries<EntryData>(
-      "SELECT * FROM entry WHERE filmpolitietId = :id;",
-      { id },
+      "SELECT * FROM entry WHERE url = :url;",
+      { url },
     );
 
     if (result.length === 0 || !result[0]) {
@@ -97,12 +96,12 @@ export class Entry {
   }
 
   public static create(data: EntryCreateInput): Entry | null {
-    const existing = this.getByFId(data.filmpolitietId);
+    const existing = this.getByUrl(data.url);
     if (existing) return existing;
 
     const created = db.queryEntries<EntryData>(
-      `INSERT INTO entry (filmpolitietId, title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
-        (:filmpolitietId, :title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
+      `INSERT INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
+        (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
       `,
       data,
     );
@@ -116,8 +115,8 @@ export class Entry {
 
   public static upsert(data: EntryCreateInput): Entry | null {
     const updated = db.queryEntries<EntryData>(
-      `INSERT OR REPLACE INTO entry (filmpolitietId, title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
-        (:filmpolitietId, :title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
+      `INSERT OR REPLACE INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
+        (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
       `,
       data,
     );
