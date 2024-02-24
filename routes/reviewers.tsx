@@ -33,7 +33,7 @@ export default function Reviewers(props: PageProps<Props>) {
   return (
     <>
       <Head>
-        <title>Entries - Filmpolitiet API</title>
+        <title>Reviewers - Filmpolitiet API</title>
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
         <h1 class="text-4xl font-semibold my-6">
@@ -45,7 +45,7 @@ export default function Reviewers(props: PageProps<Props>) {
           <ul class="columns-2 space-y-2 mb-4 list-disc pl-5">
             {data.authors.map((author) => (
               <li>
-                <a href={`/entries?author=${author.id}`} class="underline">
+                <a href={`/reviewers?author=${author.id}`} class="underline">
                   {author.fullName}
                 </a>
               </li>
