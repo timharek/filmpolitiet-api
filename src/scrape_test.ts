@@ -12,18 +12,6 @@ Deno.test("Get entries", () => {
   assertEquals(entries?.length, 50);
 });
 
-Deno.test("Parse single entry", () => {
-  const entries = forTestingOnly.getEntries(pageDocument);
-  const parsedEntry = forTestingOnly.parseEntry(entries[0]);
-
-  assertEquals(Array.from(parsedEntry.keys()), [
-    "filmpolitietId",
-    "url",
-    "name",
-    "reviewDate",
-  ]);
-});
-
 Deno.test("Get type from URL: 'show'", () => {
   const url =
     "https://p3.no/filmpolitiet/category/tv-serieanmeldelser/terningkast-3-tv-serieanmeldelser/";

@@ -19,10 +19,7 @@
   },
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "types": [
-      "./src/types/index.d.ts"
-    ]
+    "jsxImportSource": "preact"
   },
   "lint": {
     "exclude": [
