@@ -75,9 +75,9 @@ export default function Entries(props: PageProps<Props>) {
   );
 
   const types: SelectOption[] = [
-    { value: "movie", label: "Movie" },
-    { value: "show", label: "TV Show" },
-    { value: "game", label: "Games" },
+    { value: "movie", label: "🎬 Movie" },
+    { value: "show", label: "📺 TV Show" },
+    { value: "game", label: "🎮 Game" },
   ];
   const ratings: SelectOption[] = [];
   for (let index = 1; index <= 6; index++) {
