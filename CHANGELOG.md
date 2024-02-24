@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2024-02-24
+
+### Bug Fixes
+
+- Better check if it is movie or tv-show
+- Add extra enum record
+- Type errors
+
+### Features
+
+- Add initial SQLite model
+- Add zod and zod-form-data
+- Add upsert method
+- Add SECRET env when scraping RSS
+- Add "All" option
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Remove PocketBase from scraping logic
+- Use SQLite schema for reviewers/authors route
+- Use SQLite schema for entries route
+- Remove PocketBase
+- Clean up deprecations
+- Make filters work for entries route
+- Make Where work with entry title
+- Add fallbacks
+- Make cURL preview work
+- Attach issues to TODOs
+- Clean up
+- Attach issues to TODO
+- Add pagination
+- Update index route
+- Add fallback for `getAuthor()`
+- Add env for DB_PATH for SQLite
+- Remove more PocketBase stuff
+- Remove `filmpolitietId`
+- Remove more PocketBase stuff
+- Remove unused stuff
+- Increment version
+- Remove more PocketBase stuff
+- Increment version
+
+### Refactor
+
+- Make Where type-safe
+- Move API stuff to same endpoint
+- Move routes to a more logically location
+- Use `type` instead of `interface`
+
+### Testing
+
+- Update
+
 ## [0.4.3] - 2023-11-01
 
 ### Bug Fixes
