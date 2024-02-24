@@ -1,4 +1,4 @@
-import "https://deno.land/std@0.191.0/dotenv/load.ts";
+import "$std/dotenv/load.ts";
 import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { scrape } from "../../../src/scrape.ts";
 

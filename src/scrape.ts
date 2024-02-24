@@ -1,9 +1,5 @@
 import "$std/dotenv/load.ts";
-import {
-  DOMParser,
-  Element,
-  HTMLDocument,
-} from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
+import { DOMParser, Element, HTMLDocument } from "deno_dom";
 import { STATUS_CODE } from "$fresh/server.ts";
 import { Author, AuthorCreateInput } from "./db/models/author.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";

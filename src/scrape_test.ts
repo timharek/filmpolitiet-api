@@ -1,5 +1,5 @@
 import { assertEquals } from "$std/testing/asserts.ts";
-import { HTMLDocument } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
+import { HTMLDocument } from "deno_dom";
 import { forTestingOnly } from "./scrape.ts";
 
 const indexPage = new URL("./testdata/index-page.html", import.meta.url);
