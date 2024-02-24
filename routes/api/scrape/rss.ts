@@ -36,35 +36,25 @@ export const handler = async (
   } catch (error) {
     console.error("/api/scrape/rss failed.");
     console.error(error);
-    if (error instanceof ZodError) {
-      return new Response(
-        JSON.stringify(
-          {
-            name: error.name,
-            issueCount: error.issues.length,
-            issues: error.issues.map((issue) => ({
-              code: issue.code,
-              path: issue.path.map((path) => String(path)).join("."),
-            })),
-          },
-          null,
-          2,
-        ),
-        {
-          status: STATUS_CODE.BadRequest,
-        },
-      );
-    }
+    let response: Record<string, unknown> = { message: "error" };
+    let status: number = STATUS_CODE.BadRequest;
     if (error instanceof Error) {
-      return new Response(
-        JSON.stringify({ message: error.message, cause: error.cause }),
-        {
-          status: STATUS_CODE.BadRequest,
-        },
-      );
+      response = { message: error.message, cause: error.cause };
+      status = STATUS_CODE.BadRequest;
     }
-    return new Response(JSON.stringify({ message: "error" }), {
-      status: STATUS_CODE.BadRequest,
+    if (error instanceof ZodError) {
+      response = {
+        name: error.name,
+        issueCount: error.issues.length,
+        issues: error.issues.map((issue) => ({
+          code: issue.code,
+          path: issue.path.map((path) => String(path)).join("."),
+        })),
+      };
+      status = STATUS_CODE.BadRequest;
+    }
+    return new Response(JSON.stringify(response, null, 2), {
+      status,
     });
   }
 };
