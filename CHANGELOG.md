@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Bug Fixes
+
+- Typo
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
+## [0.6.0] - 2024-02-24
+
 ### Features
 
 - Better error messages
