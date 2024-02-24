@@ -155,8 +155,10 @@ export default function Entries(props: PageProps<Props>) {
         {data.entries.length === 0 && (
           <p class="">No results. Check back later.</p>
         )}
+      </div>
+      <div class="px-4 mx-auto max-w-screen-2xl">
         {data.entries.length > 0 && (
-          <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+          <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
             {data.entries.map((entry) => (
               <li>
                 <Card entry={entry} />
@@ -164,6 +166,8 @@ export default function Entries(props: PageProps<Props>) {
             ))}
           </ul>
         )}
+      </div>
+      <div class="px-4 mx-auto max-w-screen-md">
         <div class="flex flex-wrap justify-between gap-4">
           {previousPage &&
             (
