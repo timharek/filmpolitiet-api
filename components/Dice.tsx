@@ -5,10 +5,10 @@ import IconDice4 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/dice-4.tsx
 import IconDice5 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/dice-5.tsx";
 import IconDice6 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/dice-6.tsx";
 
-interface DiceProps {
+type DiceProps = {
   side: number;
   className?: string;
-}
+};
 export function Dice({ side, className }: DiceProps) {
   const ariaLabel = `Die ${side}`;
   if (side === 1) {

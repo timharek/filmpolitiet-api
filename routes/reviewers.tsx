@@ -3,11 +3,11 @@ import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
 import { Author } from "../src/db/models/author.ts";
 
-interface Props {
+type Props = {
   authors: Author[];
   page: number;
   totalPages: number;
-}
+};
 
 export const handler: Handlers<Props> = {
   async GET(req, ctx) {

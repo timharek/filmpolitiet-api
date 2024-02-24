@@ -9,12 +9,12 @@ import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { ENTRY_TYPE, Where } from "../src/db.ts";
 
-interface Props {
+type Props = {
   entries: Entry[];
   authors: Author[];
   page: number;
   totalPages: number;
-}
+};
 
 const searchParamsSchema = zfd.formData({
   q: zfd.text(z.string().optional()),

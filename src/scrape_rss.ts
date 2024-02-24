@@ -4,7 +4,7 @@ import { STATUS_CODE } from "$fresh/server.ts";
 import { Entry } from "./db/models/entry.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
 
-interface FeedItem {
+type FeedItem = {
   title: string;
   link: string;
   comments: string;
@@ -13,8 +13,8 @@ interface FeedItem {
   "post-id": {
     "#text": number;
   };
-}
-interface Feed {
+};
+type Feed = {
   xml: string;
   rss: {
     channel: {
@@ -22,11 +22,11 @@ interface Feed {
       item: FeedItem[];
     };
   };
-}
+};
 
-interface ScrapeRSSProps {
+type ScrapeRSSProps = {
   feedUrl: URL | string;
-}
+};
 
 export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
   try {

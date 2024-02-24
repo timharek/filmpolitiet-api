@@ -10,11 +10,11 @@ import { EntryCreateInput } from "./db/models/entry.ts";
 import { Entry } from "./db/models/entry.ts";
 import { ENTRY_TYPE } from "./db.ts";
 
-interface ScrapeProps {
+type ScrapeProps = {
   url: URL | string;
   isRecursive?: boolean;
   isOverwriting?: boolean;
-}
+};
 
 export async function scrape(
   { url, isRecursive, isOverwriting = true }: ScrapeProps,

@@ -1,9 +1,9 @@
 import { Entry } from "../src/db/models/entry.ts";
 import { Dice } from "./Dice.tsx";
 
-interface CardProps {
+type CardProps = {
   entry: Entry;
-}
+};
 export function Card({ entry }: CardProps) {
   const reviewDate = entry.reviewDate;
   return (
