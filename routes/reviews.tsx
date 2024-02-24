@@ -4,13 +4,13 @@ import { PageProps } from "$fresh/src/server/types.ts";
 import { Card } from "../components/Card.tsx";
 import { Select, SelectOption } from "../components/Select.tsx";
 import { Author } from "../src/db/models/author.ts";
-import { Entry, EntryData } from "../src/db/models/entry.ts";
+import { Review, ReviewData } from "../src/db/models/review.ts";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { ENTRY_TYPE, Where } from "../src/db.ts";
 
 type Props = {
-  entries: Entry[];
+  reviews: Review[];
   authors: Author[];
   page: number;
   totalPages: number;
@@ -39,8 +39,8 @@ export const handler: Handlers<Props> = {
 
     const where = getFilter({ q, type, rating, author });
 
-    const entries = Entry.getAll(PER_PAGE, page, where);
-    const count = Entry.count(where);
+    const reviews = Review.getAll(PER_PAGE, page, where);
+    const count = Review.count(where);
     const totalPages = Math.ceil(count / 48);
 
     const requestHeaders = req.headers.get("accept");
@@ -51,7 +51,7 @@ export const handler: Handlers<Props> = {
       headers.set("content-type", "application/json");
       return new Response(
         JSON.stringify({
-          values: entries,
+          values: reviews,
           page,
           totalPages,
           totalCount: count,
@@ -64,7 +64,7 @@ export const handler: Handlers<Props> = {
 
     return await ctx.render(
       {
-        entries,
+        reviews,
         page,
         totalPages,
         authors,
@@ -74,7 +74,7 @@ export const handler: Handlers<Props> = {
   },
 };
 
-export default function Entries(props: PageProps<Props>) {
+export default function Reviews(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
   const urlString = url.toString();
@@ -106,11 +106,11 @@ export default function Entries(props: PageProps<Props>) {
   return (
     <>
       <Head>
-        <title>Entries - Filmpolitiet API</title>
+        <title>Reviews - Filmpolitiet API</title>
       </Head>
       <div class="px-4 mx-auto max-w-screen-md">
         <h1 class="text-4xl font-semibold my-6">
-          Entries
+          Reviews
         </h1>
         <p class="my-6">
           Here be dragons!
@@ -165,23 +165,23 @@ export default function Entries(props: PageProps<Props>) {
           </div>
         </form>
         <div className="my-4">
-          {data.entries.length === 0
+          {data.reviews.length === 0
             ? <p class="">No results. Check back later.</p>
             : (
               <p class="">
-                Showing {data.entries.length}{" "}
+                Showing {data.reviews.length}{" "}
                 {data.totalCount > PER_PAGE ? `of ${data.totalCount}` : ""}{" "}
-                entries.
+                reviews.
               </p>
             )}
         </div>
       </div>
       <div class="px-4 mx-auto max-w-screen-2xl">
-        {data.entries.length > 0 && (
+        {data.reviews.length > 0 && (
           <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
-            {data.entries.map((entry) => (
+            {data.reviews.map((entry) => (
               <li>
-                <Card entry={entry} />
+                <Card review={entry} />
               </li>
             ))}
           </ul>
@@ -215,9 +215,9 @@ export default function Entries(props: PageProps<Props>) {
 
 function getFilter(
   { q, type, rating, author }: Omit<SearchParams, "page">,
-): Where<keyof EntryData> | null {
+): Where<keyof ReviewData> | null {
   const filters = [];
-  const args = {} as Where<keyof EntryData>["args"];
+  const args = {} as Where<keyof ReviewData>["args"];
 
   if (q) {
     filters.push(`title LIKE '%' || :title || '%'`);

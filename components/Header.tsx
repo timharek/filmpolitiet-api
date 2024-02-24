@@ -1,8 +1,8 @@
 export function Header() {
   const links = [
     {
-      name: "Entries",
-      path: "/entries",
+      name: "Reviews",
+      path: "/reviews",
     },
     {
       name: "Reviewers",

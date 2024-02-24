@@ -2,8 +2,7 @@ import "$std/dotenv/load.ts";
 import { DOMParser, Element, HTMLDocument } from "deno_dom";
 import { STATUS_CODE } from "$fresh/server.ts";
 import { Author, AuthorCreateInput } from "./db/models/author.ts";
-import { EntryCreateInput } from "./db/models/entry.ts";
-import { Entry } from "./db/models/entry.ts";
+import { Review, ReviewCreateInput } from "./db/models/review.ts";
 import { ENTRY_TYPE } from "./db.ts";
 
 type ScrapeProps = {
@@ -51,10 +50,10 @@ export async function scrape(
     if (isOverwriting) {
       // TODO: Add upcate method. https://todo.sr.ht/~timharek/filmpolitiet-api/5
       console.log("overwriting");
-      Entry.upsert(entry);
+      Review.upsert(entry);
       continue;
     }
-    Entry.create(entry);
+    Review.create(entry);
   }
 
   const nextPage = pageDocument.querySelector(".post-previous a")?.attributes
@@ -92,7 +91,7 @@ async function parseEntry(
     rating: number;
     typeId: number;
   },
-): Promise<EntryCreateInput> {
+): Promise<ReviewCreateInput> {
   const title = entry.querySelector("header h2 a")!.textContent;
   console.debug("title", title);
   const coverArtUrl = await getCoverArt(entry) ?? "";

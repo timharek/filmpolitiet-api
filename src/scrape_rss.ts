@@ -1,7 +1,6 @@
 import { parse } from "https://deno.land/x/xml@2.0.4/mod.ts";
 import { getAuthor, getCoverArtUrl, inputTypeEnum } from "./scrape.ts";
-import { Entry } from "./db/models/entry.ts";
-import { EntryCreateInput } from "./db/models/entry.ts";
+import { Review, ReviewCreateInput } from "./db/models/review.ts";
 import { z } from "zod";
 
 const feedItemSchema = z.object({
@@ -106,7 +105,7 @@ async function parseItem(
     rating: number;
     typeId: number;
   },
-): Promise<EntryCreateInput> {
+): Promise<ReviewCreateInput> {
   const url = item.link;
   const coverArtUrl = await getCoverArtUrl(url);
 
@@ -123,7 +122,7 @@ async function parseItem(
 
 async function resolveItem(item: FeedItem) {
   const { rating, type: typeString } = getRatingAndType(item);
-  const type = Entry.getType(typeString);
+  const type = Review.getType(typeString);
   if (!type) throw new Error("Missing type", { cause: "bad_data" });
   const author = await getAuthor(item.link, true);
   if (!author) throw new Error("Missing author", { cause: "bad_data" });
@@ -133,7 +132,7 @@ async function resolveItem(item: FeedItem) {
     typeId: type.id,
     authorId: author.id,
   });
-  Entry.create(parsedItem);
+  Review.create(parsedItem);
 }
 
 export const forTestingOnly = {

@@ -6,9 +6,9 @@ import * as $_app from "./routes/_app.tsx";
 import * as $api_scrape_index from "./routes/api/scrape/index.ts";
 import * as $api_scrape_rss from "./routes/api/scrape/rss.ts";
 import * as $docs from "./routes/docs.tsx";
-import * as $entries from "./routes/entries.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $reviewers from "./routes/reviewers.tsx";
+import * as $reviews from "./routes/reviews.tsx";
 
 import { type Manifest } from "$fresh/server.ts";
 
@@ -18,9 +18,9 @@ const manifest = {
     "./routes/api/scrape/index.ts": $api_scrape_index,
     "./routes/api/scrape/rss.ts": $api_scrape_rss,
     "./routes/docs.tsx": $docs,
-    "./routes/entries.tsx": $entries,
     "./routes/index.tsx": $index,
     "./routes/reviewers.tsx": $reviewers,
+    "./routes/reviews.tsx": $reviews,
   },
   islands: {},
   baseUrl: import.meta.url,

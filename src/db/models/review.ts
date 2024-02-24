@@ -1,7 +1,7 @@
 import { db, Where } from "../../db.ts";
 import { Author } from "./author.ts";
 
-export type EntryData = {
+export type ReviewData = {
   id: string;
   title: string;
   url: string;
@@ -12,18 +12,18 @@ export type EntryData = {
   coverArtUrl?: string;
 };
 
-export type EntryCreateInput = { id?: number } & Omit<EntryData, "id">;
+export type ReviewCreateInput = { id?: number } & Omit<ReviewData, "id">;
 
-type EntryType = {
+type ReviewType = {
   id: number;
   title: string;
 };
 
-export class Entry {
-  private constructor(private data: EntryData) {}
+export class Review {
+  private constructor(private data: ReviewData) {}
 
-  public static get(id: number): Entry | null {
-    const result = db.queryEntries<EntryData>(
+  public static get(id: number): Review | null {
+    const result = db.queryEntries<ReviewData>(
       "SELECT * FROM entry WHERE id = :id",
       { id },
     );
@@ -32,36 +32,36 @@ export class Entry {
       return null;
     }
 
-    return new Entry(result[0]);
+    return new Review(result[0]);
   }
 
   public static getAll(
     pageSize = 48,
     pageNo = 1,
-    where?: Where<keyof EntryData> | null,
-  ): Entry[] {
-    const entries: Entry[] = [];
-    let result: EntryData[];
+    where?: Where<keyof ReviewData> | null,
+  ): Review[] {
+    const entries: Review[] = [];
+    let result: ReviewData[];
     const offset = (pageNo - 1) * pageSize;
     const paginationString = `LIMIT ${pageSize} OFFSET ${offset ?? 0}`;
-    result = db.queryEntries<EntryData>(
+    result = db.queryEntries<ReviewData>(
       `SELECT * FROM entry ORDER BY reviewDate DESC ${paginationString}`,
     );
     if (where) {
-      result = db.queryEntries<EntryData>(
+      result = db.queryEntries<ReviewData>(
         `SELECT * FROM entry WHERE ${where.string} ORDER BY reviewDate DESC ${paginationString}`,
         where.args,
       );
     }
 
     for (const entry of result) {
-      entries.push(new Entry(entry));
+      entries.push(new Review(entry));
     }
 
     return entries;
   }
 
-  public static count(where?: Where<keyof EntryData> | null): number {
+  public static count(where?: Where<keyof ReviewData> | null): number {
     type Count = Record<"COUNT(*)", number>;
     let count =
       db.queryEntries<Count>(`SELECT COUNT(*) FROM entry`)[0]["COUNT(*)"];
@@ -75,8 +75,8 @@ export class Entry {
     return count;
   }
 
-  public static getType(title: string): EntryType | null {
-    const result = db.queryEntries<EntryType>(
+  public static getType(title: string): ReviewType | null {
+    const result = db.queryEntries<ReviewType>(
       "SELECT * FROM entryType WHERE title = :title",
       { title },
     );
@@ -88,8 +88,8 @@ export class Entry {
     return result[0];
   }
 
-  public static getByUrl(url: string): Entry | null {
-    const result = db.queryEntries<EntryData>(
+  public static getByUrl(url: string): Review | null {
+    const result = db.queryEntries<ReviewData>(
       "SELECT * FROM entry WHERE url = :url;",
       { url },
     );
@@ -98,14 +98,14 @@ export class Entry {
       return null;
     }
 
-    return new Entry(result[0]);
+    return new Review(result[0]);
   }
 
-  public static create(data: EntryCreateInput): Entry | null {
+  public static create(data: ReviewCreateInput): Review | null {
     const existing = this.getByUrl(data.url);
     if (existing) return existing;
 
-    const created = db.queryEntries<EntryData>(
+    const created = db.queryEntries<ReviewData>(
       `INSERT INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
         (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
       `,
@@ -116,11 +116,11 @@ export class Entry {
       return null;
     }
 
-    return new Entry(created[0]);
+    return new Review(created[0]);
   }
 
-  public static upsert(data: EntryCreateInput): Entry | null {
-    const updated = db.queryEntries<EntryData>(
+  public static upsert(data: ReviewCreateInput): Review | null {
+    const updated = db.queryEntries<ReviewData>(
       `INSERT OR REPLACE INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
         (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
       `,
@@ -130,7 +130,7 @@ export class Entry {
       return null;
     }
 
-    return new Entry(updated[0]);
+    return new Review(updated[0]);
   }
 
   get type(): string {
