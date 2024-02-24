@@ -1,6 +1,11 @@
+import "$std/dotenv/load.ts";
 import { DB } from "sqlite";
 
-export const db = new DB("data.db");
+const dbPath = Deno.env.get("DB_PATH");
+if (!dbPath) {
+  throw new Error("Missing `DB_PATH`");
+}
+export const db = new DB(dbPath);
 
 db.execute(`
     CREATE TABLE IF NOT EXISTS entryType (
