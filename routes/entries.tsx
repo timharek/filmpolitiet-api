@@ -41,7 +41,7 @@ export const handler: Handlers<Props> = {
 
     const entries = Entry.getAll(PER_PAGE, page, where);
     const count = Entry.count(where);
-    const totalPages = count / 48;
+    const totalPages = Math.ceil(count / 48);
 
     const requestHeaders = req.headers.get("accept");
     const isRequestingHtml = requestHeaders?.includes("text/html");
@@ -49,7 +49,15 @@ export const handler: Handlers<Props> = {
     if (!isRequestingHtml) {
       const headers = new Headers();
       headers.set("content-type", "application/json");
-      return new Response(JSON.stringify(entries), { headers });
+      return new Response(
+        JSON.stringify({
+          values: entries,
+          page,
+          totalPages,
+          totalCount: count,
+        }),
+        { headers },
+      );
     }
 
     const authors = Author.getAll();
