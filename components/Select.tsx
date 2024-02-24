@@ -18,6 +18,7 @@ export function Select(props: SelectProps) {
       <label class="font-semibold" for={name}>{label}</label>
       <select
         id={name}
+        name={name}
         class="p-2 w-max rounded dark:text-black"
         {...rest}
       >
