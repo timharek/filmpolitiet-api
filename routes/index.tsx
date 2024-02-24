@@ -18,13 +18,21 @@ export default function Home() {
           the dateset from Filmpolitiets official archive.
         </p>
         <p class="my-6">
-          This application checks their official RSS-feed every 5 minutes.
+          This application checks their official RSS-feed every hour.
         </p>
         <p class="my-6">
-          Want to contribute? Check out the
-          <a href="https://sr.ht/~timharek/filmpolitiet-api/">source code</a>
-          and our
-          <a href="https://todo.sr.ht/~timharek/filmpolitiet-api">
+          Want to contribute? Check out the{" "}
+          <a
+            href="https://sr.ht/~timharek/filmpolitiet-api/"
+            className="underline"
+          >
+            source code
+          </a>{"  "}
+          and our{" "}
+          <a
+            href="https://todo.sr.ht/~timharek/filmpolitiet-api"
+            className="underline"
+          >
             issue-tracker
           </a>.
         </p>
