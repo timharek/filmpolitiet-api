@@ -191,13 +191,11 @@ function getRatingFromUrl(url: URL | string): number {
   return Number(rating);
 }
 
-interface InputType {
-  [key: string]: string;
-}
-export const inputTypeEnum: InputType = {
+export const inputTypeEnum: Record<string, string> = {
   "tv-serieanmeldelser": "show",
   "spillanmeldelser": "game",
   "\-filmanmeldelser": "movie",
+  "filmanmeldelser": "movie",
 };
 
 type EntryType = "show" | "movie" | "game";
