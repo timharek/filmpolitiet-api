@@ -2,11 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.5.4] - 2024-02-24
+
+### Bug Fixes
+
+- Deprecation
+- Replace `hidden` with `sr-only`
 
 ### Miscellaneous Tasks
 
 - Update changelog
+- Update version
+
+### Styling
+
+- Add emoji-flare
+- Add emoji-flare to Select
 
 ## [0.5.3] - 2024-02-24
 
