@@ -3,10 +3,25 @@ import { HandlerContext, Status } from "$fresh/server.ts";
 import { scrapeRSS } from "../../../src/scrape_rss.ts";
 
 export const handler = async (
-  _req: Request,
+  req: Request,
   _ctx: HandlerContext,
 ): Promise<Response> => {
+  const { searchParams } = new URL(req.url);
   try {
+    const SECRET = Deno.env.get("SECRET");
+    if (!SECRET) {
+      throw new Error("Missing `SECRET`");
+    }
+
+    const providedSecret = searchParams.get("secret");
+
+    if (!providedSecret) {
+      throw new Error("Missing `SECRET`");
+    }
+
+    if (SECRET !== providedSecret) {
+      throw new Error("Provided secret doesn't match `SECERT`");
+    }
     const feedUrl = new URL(
       "https://p3.no/category/filmpolitiet-anmelder/feed/",
     );
