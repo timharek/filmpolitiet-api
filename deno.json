@@ -55,7 +55,7 @@
     "twind": "https://esm.sh/twind@1.0.7",
     "twind/": "https://esm.sh/twind@1.0.7/",
     "@twind/": "https://esm.sh/@twind/",
-    "$std/": "https://deno.land/std@0.192.0/",
+    "$std/": "https://deno.land/std@0.215.0/",
     "sqlite": "https://deno.land/x/sqlite@v3.8/mod.ts",
     "zod": "npm:zod@3.22.4",
     "zod-form-data": "npm:zod-form-data@2.0.2"
