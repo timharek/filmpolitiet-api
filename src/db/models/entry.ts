@@ -61,12 +61,18 @@ export class Entry {
     return entries;
   }
 
-  public static count(): number {
-    const result = db.queryEntries<EntryData>(
-      `SELECT * FROM entry ORDER BY reviewDate DESC`,
-    );
+  public static count(where?: Where<keyof EntryData> | null): number {
+    type Count = Record<"COUNT(*)", number>;
+    let count =
+      db.queryEntries<Count>(`SELECT COUNT(*) FROM entry`)[0]["COUNT(*)"];
+    if (where) {
+      count = db.queryEntries<Count>(
+        `SELECT COUNT(*) FROM entry WHERE ${where.string}`,
+        where.args,
+      )[0]["COUNT(*)"];
+    }
 
-    return result.length;
+    return count;
   }
 
   public static getType(title: string): EntryType | null {

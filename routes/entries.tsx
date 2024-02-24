@@ -14,6 +14,7 @@ type Props = {
   authors: Author[];
   page: number;
   totalPages: number;
+  totalCount: number;
 };
 
 const searchParamsSchema = zfd.formData({
@@ -24,6 +25,8 @@ const searchParamsSchema = zfd.formData({
   page: zfd.numeric(z.number().default(1)),
 });
 
+const PER_PAGE = 48;
+
 type SearchParams = z.infer<typeof searchParamsSchema>;
 
 export const handler: Handlers<Props> = {
@@ -33,12 +36,11 @@ export const handler: Handlers<Props> = {
     const { q, type, rating, author, page } = searchParamsSchema.parse(
       url.searchParams,
     );
-    const perPage = 48;
 
     const where = getFilter({ q, type, rating, author });
 
-    const entries = Entry.getAll(perPage, page, where);
-    const count = Entry.count();
+    const entries = Entry.getAll(PER_PAGE, page, where);
+    const count = Entry.count(where);
     const totalPages = count / 48;
 
     const requestHeaders = req.headers.get("accept");
@@ -58,6 +60,7 @@ export const handler: Handlers<Props> = {
         page,
         totalPages,
         authors,
+        totalCount: count,
       },
     );
   },
@@ -152,9 +155,17 @@ export default function Entries(props: PageProps<Props>) {
             </button>
           </div>
         </form>
-        {data.entries.length === 0 && (
-          <p class="">No results. Check back later.</p>
-        )}
+        <div className="my-4">
+          {data.entries.length === 0
+            ? <p class="">No results. Check back later.</p>
+            : (
+              <p class="">
+                Showing {data.entries.length}{" "}
+                {data.totalCount > PER_PAGE ? `of ${data.totalCount}` : ""}{" "}
+                entries.
+              </p>
+            )}
+        </div>
       </div>
       <div class="px-4 mx-auto max-w-screen-2xl">
         {data.entries.length > 0 && (
