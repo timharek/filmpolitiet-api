@@ -10,17 +10,19 @@ export const handler = async (
   try {
     const SECRET = Deno.env.get("SECRET");
     if (!SECRET) {
-      throw new Error("Missing `SECRET`");
+      throw new Error("Missing `SECRET`", { cause: "environment" });
     }
 
     const providedSecret = searchParams.get("secret");
 
     if (!providedSecret) {
-      throw new Error("Missing `SECRET`");
+      throw new Error("Missing secret parameter");
     }
 
     if (SECRET !== providedSecret) {
-      throw new Error("Provided secret doesn't match `SECERT`");
+      throw new Error("Provided secret doesn't match `SECERT`", {
+        cause: "parameter",
+      });
     }
     const feedUrl = new URL(
       "https://p3.no/category/filmpolitiet-anmelder/feed/",
@@ -33,6 +35,14 @@ export const handler = async (
   } catch (error) {
     console.error("/api/scrape/rss failed.");
     console.error(error);
+    if (error instanceof Error) {
+      return new Response(
+        JSON.stringify({ message: error.message, cause: error.cause }),
+        {
+          status: STATUS_CODE.BadRequest,
+        },
+      );
+    }
     return new Response(JSON.stringify({ message: "error" }), {
       status: STATUS_CODE.BadRequest,
     });

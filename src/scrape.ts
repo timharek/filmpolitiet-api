@@ -126,7 +126,7 @@ async function getReviewDate(entry: Element): Promise<string> {
   const entryPageDom = await getPageDoc(url);
 
   if (!entryPageDom) {
-    throw new Error("Entry doesn't exit.");
+    throw new Error("Entry doesn't exit.", { cause: "bad_data" });
   }
 
   return entryPageDom.querySelector(".post time")?.attributes.getNamedItem(
@@ -161,7 +161,7 @@ export async function getAuthor(
 
   const author = Author.create(authorInput);
   if (!author) {
-    throw new Error("Failed to create new author");
+    throw new Error("Failed to create new author", { cause: "faulty_data" });
   }
   if (isOverwriting) {
     // TODO: Update author. https://todo.sr.ht/~timharek/filmpolitiet-api/6

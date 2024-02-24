@@ -29,18 +29,17 @@ type ScrapeRSSProps = {
 };
 
 export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
-  try {
-    const feed = await fetch(feedUrl).then((res) => res.text());
-    const items = getItems(feed);
+  const feed = await fetch(feedUrl).then((res) => res.text()).catch(
+    (error) => {
+      throw new Error(error, { cause: "fetch" });
+    },
+  );
+  const items = getItems(feed);
 
-    for (const item of items) {
-      await resolveItem(item);
-    }
-    return STATUS_CODE.Created;
-  } catch (error) {
-    console.error(error);
-    return STATUS_CODE.InternalServerError;
+  for (const item of items) {
+    await resolveItem(item);
   }
+  return STATUS_CODE.Created;
 }
 
 function getItems(feed: string) {
@@ -68,7 +67,9 @@ function getRatingAndType(
     category.match("Filmanmeldelser|TV-serieanmeldelser|Spillanmeldelser")
   );
   if (!ratingCategory || !typeCategory) {
-    throw new Error("Missing category for rating and/or type.");
+    throw new Error("Missing category for rating and/or type.", {
+      cause: "bad_data",
+    });
   }
 
   const rating = getRatingFromString(ratingCategory);
@@ -89,7 +90,7 @@ function getTypeFromString(string: string): "show" | "movie" | "game" {
   const typeMatch = string.toLocaleLowerCase().match(typeRegex);
   const inputTypeMatch = typeMatch ? typeMatch[1] : null;
   if (!inputTypeMatch) {
-    throw new Error("Type string was invalid!");
+    throw new Error("Type string was invalid!", { cause: "bad_data" });
   }
   const inputType = inputTypeEnum[inputTypeMatch];
   return inputType as "show" | "movie" | "game";
@@ -120,9 +121,9 @@ async function parseItem(
 async function resolveItem(item: FeedItem) {
   const { rating, type: typeString } = getRatingAndType(item);
   const type = Entry.getType(typeString);
-  if (!type) throw new Error("Missing type");
+  if (!type) throw new Error("Missing type", { cause: "bad_data" });
   const author = await getAuthor(item.link, true);
-  if (!author) throw new Error("Missing author");
+  if (!author) throw new Error("Missing author", { cause: "bad_data" });
   const parsedItem = await parseItem({
     item,
     rating,

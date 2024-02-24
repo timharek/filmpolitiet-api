@@ -19,6 +19,14 @@ export const handler = async (
   } catch (error) {
     console.error("/api/scrape failed.");
     console.error(error);
+    if (error instanceof Error) {
+      return new Response(
+        JSON.stringify({ message: error.message, cause: error.cause }),
+        {
+          status: STATUS_CODE.BadRequest,
+        },
+      );
+    }
     return new Response(JSON.stringify({ message: "error" }), {
       status: STATUS_CODE.BadRequest,
     });
