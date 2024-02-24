@@ -29,10 +29,13 @@ export const handler = async (
       "https://p3.no/category/filmpolitiet-anmelder/feed/",
     );
 
-    await scrapeRSS({ feedUrl });
-    return new Response(JSON.stringify({ message: "sucess!" }), {
-      status: STATUS_CODE.OK,
-    });
+    const successItems = await scrapeRSS({ feedUrl });
+    return new Response(
+      JSON.stringify({ message: "sucess!", items: successItems }),
+      {
+        status: STATUS_CODE.OK,
+      },
+    );
   } catch (error) {
     console.error("/api/scrape/rss failed.");
     console.error(error);

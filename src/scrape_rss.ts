@@ -1,6 +1,5 @@
 import { parse } from "https://deno.land/x/xml@2.0.4/mod.ts";
 import { getAuthor, getCoverArtUrl, inputTypeEnum } from "./scrape.ts";
-import { STATUS_CODE } from "$fresh/server.ts";
 import { Entry } from "./db/models/entry.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
 import { z } from "zod";
@@ -8,7 +7,6 @@ import { z } from "zod";
 const feedItemSchema = z.object({
   title: z.string(),
   link: z.string(),
-  comments: z.string(),
   category: z.union([z.string(), z.array(z.string())]),
   pubDate: z.string(),
   "post-id": z.object({
@@ -26,7 +24,6 @@ const feedSchema = z.object({
 });
 
 type FeedItem = z.infer<typeof feedItemSchema>;
-type Feed = z.infer<typeof feedSchema>;
 
 type ScrapeRSSProps = {
   feedUrl: URL | string;
@@ -40,10 +37,12 @@ export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
   );
   const items = getItems(feed);
 
+  let sucessesfulItems = 0;
   for (const item of items) {
     await resolveItem(item);
+    sucessesfulItems++;
   }
-  return STATUS_CODE.Created;
+  return sucessesfulItems;
 }
 
 function getItems(feed: string) {
