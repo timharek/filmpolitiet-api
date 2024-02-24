@@ -155,12 +155,17 @@ export class Entry {
   }
 
   get coverArtUrl(): URL | null {
+    let url;
     if (!this.data.coverArtUrl) return null;
     if (this.data.coverArtUrl.startsWith("https")) {
-      return new URL(this.data.coverArtUrl);
+      url = new URL(this.data.coverArtUrl);
+    } else {
+      url = new URL(`https:${this.data.coverArtUrl}`);
     }
 
-    return new URL(`https:${this.data.coverArtUrl}`);
+    url.searchParams.set("w", "240");
+
+    return url;
   }
 
   get title(): string {
