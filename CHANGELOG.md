@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Bug Fixes
+
+- API preview included page=2 on pageNo 1
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
 ## [0.5.4] - 2024-02-24
 
 ### Bug Fixes
