@@ -30,7 +30,9 @@ export class Author {
    */
   public static getAll(): Author[] {
     const authors: Author[] = [];
-    const result = db.queryEntries<AuthorData>("SELECT * FROM author");
+    const result = db.queryEntries<AuthorData>(
+      "SELECT * FROM author ORDER BY fullName ASC",
+    );
 
     for (const author of result) {
       authors.push(new Author(author));
