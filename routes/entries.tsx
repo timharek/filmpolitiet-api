@@ -138,7 +138,7 @@ export default function Entries(props: PageProps<Props>) {
             />
           </div>
           <div class="flex gap-2">
-            <label for="search" class="hidden">Search</label>
+            <label for="search" class="sr-only">Search</label>
             <input
               id="search"
               type="search"
