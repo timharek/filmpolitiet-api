@@ -1,25 +1,28 @@
-export interface SelectOption {
+import { JSX } from "preact";
+
+export type SelectOption = {
   value: string;
   label: string;
-}
-interface SelectProps extends Partial<Omit<HTMLSelectElement, "options">> {
+};
+
+type SelectProps = {
+  name: string;
   label: string;
   options: SelectOption[];
-  defaultValue?: string;
-  notFirstEmpty?: true;
-}
+} & JSX.HTMLAttributes<HTMLSelectElement>;
 
 export function Select(props: SelectProps) {
+  const { id: _id, name, label, options, ...rest } = props;
   return (
     <div class="flex flex-col">
-      <label class="font-semibold" for={props.name}>{props.label}</label>
+      <label class="font-semibold" for={name}>{label}</label>
       <select
-        id={props.name}
+        id={name}
         class="p-2 w-max rounded dark:text-black"
-        {...props}
+        {...rest}
       >
         <option selected value="">All</option>
-        {Array.from(props.options).map((option) => (
+        {options.map((option) => (
           <option value={option.value}>{option.label}</option>
         ))}
       </select>
