@@ -45,7 +45,7 @@ export default function Reviewers(props: PageProps<Props>) {
           <ul class="columns-2 space-y-2 mb-4 list-disc pl-5">
             {data.authors.map((author) => (
               <li>
-                <a href={`/reviewer?author=${author.id}`} class="underline">
+                <a href={`/reviews?author=${author.id}`} class="underline">
                   {author.fullName}
                 </a>
               </li>
