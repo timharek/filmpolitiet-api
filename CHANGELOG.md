@@ -6,6 +6,17 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Typo again
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
+## [0.6.1] - 2024-02-24
+
+### Bug Fixes
+
 - Typo
 
 ### Miscellaneous Tasks
