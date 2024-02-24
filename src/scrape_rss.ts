@@ -1,6 +1,6 @@
 import { parse } from "https://deno.land/x/xml@2.0.4/mod.ts";
 import { getAuthor, getCoverArtUrl, inputTypeEnum } from "./scrape.ts";
-import { Status } from "$fresh/server.ts";
+import { STATUS_CODE } from "$fresh/server.ts";
 import { Entry } from "./db/models/entry.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
 
@@ -28,9 +28,7 @@ interface ScrapeRSSProps {
   feedUrl: URL | string;
 }
 
-export async function scrapeRSS(
-  { feedUrl }: ScrapeRSSProps,
-): Promise<Status.Created | Status.InternalServerError> {
+export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
   try {
     const feed = await fetch(feedUrl).then((res) => res.text());
     const items = getItems(feed);
@@ -38,10 +36,10 @@ export async function scrapeRSS(
     for (const item of items) {
       await resolveItem(item);
     }
-    return Status.Created;
+    return STATUS_CODE.Created;
   } catch (error) {
     console.error(error);
-    return Status.InternalServerError;
+    return STATUS_CODE.InternalServerError;
   }
 }
 

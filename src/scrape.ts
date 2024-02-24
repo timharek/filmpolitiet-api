@@ -4,7 +4,7 @@ import {
   Element,
   HTMLDocument,
 } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
-import { Status } from "$fresh/server.ts";
+import { STATUS_CODE } from "$fresh/server.ts";
 import { Author, AuthorCreateInput } from "./db/models/author.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
 import { Entry } from "./db/models/entry.ts";
@@ -18,18 +18,18 @@ interface ScrapeProps {
 
 export async function scrape(
   { url, isRecursive, isOverwriting = true }: ScrapeProps,
-): Promise<Status.Created | Status.NoContent | Status.NotFound> {
+): Promise<number> {
   const rating = getRatingFromUrl(url);
   const type = getTypeFromUrl(url);
 
   const pageDocument = await getPageDoc(url);
   if (!pageDocument) {
-    return Status.NotFound;
+    return STATUS_CODE.NotFound;
   }
   const entries = getEntries(pageDocument);
 
   if (entries.length === 0) {
-    return Status.NoContent;
+    return STATUS_CODE.NoContent;
   }
 
   const parsedEntries = [];
@@ -68,7 +68,7 @@ export async function scrape(
     await scrape({ url: nextPage, isRecursive: true });
   }
 
-  return Status.Created;
+  return STATUS_CODE.Created;
 }
 
 async function getPageDoc(

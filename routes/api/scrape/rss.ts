@@ -1,10 +1,10 @@
 import "$std/dotenv/load.ts";
-import { HandlerContext, Status } from "$fresh/server.ts";
+import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { scrapeRSS } from "../../../src/scrape_rss.ts";
 
 export const handler = async (
   req: Request,
-  _ctx: HandlerContext,
+  _ctx: FreshContext,
 ): Promise<Response> => {
   const { searchParams } = new URL(req.url);
   try {
@@ -28,13 +28,13 @@ export const handler = async (
 
     await scrapeRSS({ feedUrl });
     return new Response(JSON.stringify({ message: "sucess!" }), {
-      status: Status.OK,
+      status: STATUS_CODE.OK,
     });
   } catch (error) {
     console.error("/api/scrape/rss failed.");
     console.error(error);
     return new Response(JSON.stringify({ message: "error" }), {
-      status: Status.BadRequest,
+      status: STATUS_CODE.BadRequest,
     });
   }
 };
