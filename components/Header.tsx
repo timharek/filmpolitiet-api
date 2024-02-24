@@ -17,7 +17,7 @@ export function Header() {
     <header class="">
       <div class="max-w-screen-md mx-auto px-4 py-8 flex justify-between">
         <a href="/" class="text-lg font-semibold">
-          Unoffical API for Filmpolitiet
+          🍿 Filmpolitiet API
         </a>
         <ul class="flex gap-4">
           {links.map((link) => (

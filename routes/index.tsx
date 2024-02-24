@@ -8,7 +8,7 @@ export default function Home() {
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
         <h1 class="text-4xl font-semibold my-6">
-          Filmpolitiets unofficial API
+          🍿 Unofficial Filmpolitiet API
         </h1>
         <p class="my-6">
           Welcome to Filmpolitiets unofficial API.
