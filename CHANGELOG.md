@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2024-02-24
+
+### Bug Fixes
+
+- Use name
+- Typos
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Update version
+
+### Performance
+
+- Use smaller images
+
 ## [0.5.1] - 2024-02-24
 
 ### Bug Fixes
