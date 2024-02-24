@@ -1,6 +1,7 @@
 import "$std/dotenv/load.ts";
 import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { scrapeRSS } from "../../../src/scrape_rss.ts";
+import { ZodError } from "zod";
 
 export const handler = async (
   req: Request,
@@ -35,6 +36,25 @@ export const handler = async (
   } catch (error) {
     console.error("/api/scrape/rss failed.");
     console.error(error);
+    if (error instanceof ZodError) {
+      return new Response(
+        JSON.stringify(
+          {
+            name: error.name,
+            issueCount: error.issues.length,
+            issues: error.issues.map((issue) => ({
+              code: issue.code,
+              path: issue.path.map((path) => String(path)).join("."),
+            })),
+          },
+          null,
+          2,
+        ),
+        {
+          status: STATUS_CODE.BadRequest,
+        },
+      );
+    }
     if (error instanceof Error) {
       return new Response(
         JSON.stringify({ message: error.message, cause: error.cause }),

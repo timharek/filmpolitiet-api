@@ -3,26 +3,30 @@ import { getAuthor, getCoverArtUrl, inputTypeEnum } from "./scrape.ts";
 import { STATUS_CODE } from "$fresh/server.ts";
 import { Entry } from "./db/models/entry.ts";
 import { EntryCreateInput } from "./db/models/entry.ts";
+import { z } from "zod";
 
-type FeedItem = {
-  title: string;
-  link: string;
-  comments: string;
-  category: string | string[];
-  pubDate: string;
-  "post-id": {
-    "#text": number;
-  };
-};
-type Feed = {
-  xml: string;
-  rss: {
-    channel: {
-      title: string;
-      item: FeedItem[];
-    };
-  };
-};
+const feedItemSchema = z.object({
+  title: z.string(),
+  link: z.string(),
+  comments: z.string(),
+  category: z.union([z.string(), z.array(z.string())]),
+  pubDate: z.string(),
+  "post-id": z.object({
+    "#text": z.number(),
+  }),
+});
+
+const feedSchema = z.object({
+  rss: z.object({
+    channel: z.object({
+      title: z.string(),
+      item: z.array(feedItemSchema),
+    }),
+  }),
+});
+
+type FeedItem = z.infer<typeof feedItemSchema>;
+type Feed = z.infer<typeof feedSchema>;
 
 type ScrapeRSSProps = {
   feedUrl: URL | string;
@@ -43,7 +47,7 @@ export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
 }
 
 function getItems(feed: string) {
-  const parsedFeed = parse(feed) as unknown as Feed;
+  const parsedFeed = feedSchema.parse(parse(feed));
   const items = parsedFeed.rss.channel.item.filter((item) => {
     if (Array.isArray(item.category) && !item.category.includes("Toppsak")) {
       return item;
