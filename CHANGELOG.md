@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Features
+
+- Better error messages
+- Add ZodError handling
+- Add pagination to JSON response
+- Add sucessfulItem counter
+
+### Miscellaneous Tasks
+
+- Update changelog
+- Use import-map
+- Less duplication of code
+- Update version
+
+### Refactor
+
+- "Entry" -> "Review"
+
+### Styling
+
+- Pluralize
+
+## [0.5.5] - 2024-02-24
+
 ### Bug Fixes
 
 - API preview included page=2 on pageNo 1
