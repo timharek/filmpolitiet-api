@@ -69,6 +69,7 @@ export const handler: Handlers<Props> = {
 export default function Entries(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
+  const urlString = url.toString();
 
   const { q: search, type, author, rating } = searchParamsSchema.parse(
     url.searchParams,
@@ -111,7 +112,7 @@ export default function Entries(props: PageProps<Props>) {
             <summary>API filter preview</summary>
             <div class="p-4 bg-slate-800 text-white select-all rounded">
               <code class="">
-                curl -X GET "{url.toString()}"
+                curl -X GET "{urlString}"
               </code>
             </div>
           </details>
