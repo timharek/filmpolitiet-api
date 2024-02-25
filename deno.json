@@ -7,6 +7,7 @@
     "dev": "deno run -A --watch=static/,routes/ dev.ts",
     "start": "deno run -A main.ts",
     "setup:hooks": "deno run -A -r https://deno.land/x/githooks/githooks.ts",
+    "setup:srht": "git config format.subjectPrefix 'PATCH filmpolitiet-api' && git config sendemail.to '~timharek/filmpolitiet-api-dev@lists.sr.ht' && git config sendemail.validate true",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts"
