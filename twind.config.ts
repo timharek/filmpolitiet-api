@@ -1,9 +1,15 @@
-import { defineConfig, ThemeConfig } from "@twind/core";
+import { defineConfig, Preset, ThemeConfig } from "@twind/core";
 import presetTailwind from "@twind/preset-tailwind@1.1.4";
+import presetTypography, {
+  TypographyTheme,
+} from "@twind/preset-typography@1.0.7";
 
 export default {
   ...defineConfig({
-    presets: [presetTailwind()],
+    presets: [
+      presetTailwind(),
+      presetTypography({ defaultColor: "white" }) as Preset<TypographyTheme>,
+    ],
     theme: {
       extend: {
         colors: {
