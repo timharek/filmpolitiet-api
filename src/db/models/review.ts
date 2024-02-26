@@ -36,9 +36,11 @@ export class Review {
   }
 
   public static getAll(
-    pageSize = 48,
-    pageNo = 1,
-    where?: Where<keyof ReviewData> | null,
+    { pageSize = 48, pageNo = 1, where }: {
+      pageSize: number;
+      pageNo: number;
+      where?: Where<keyof ReviewData> | null;
+    },
   ): Review[] {
     const entries: Review[] = [];
     let result: ReviewData[];

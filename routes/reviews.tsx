@@ -39,7 +39,7 @@ export const handler: Handlers<Props> = {
 
     const where = generateWhere({ q, type, rating, author });
 
-    const reviews = Review.getAll(PER_PAGE, page, where);
+    const reviews = Review.getAll({ pageSize: PER_PAGE, pageNo: page, where });
     const count = Review.count(where);
     const totalPages = Math.ceil(count / 48);
 
