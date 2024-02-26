@@ -37,7 +37,7 @@ export const handler: Handlers<Props> = {
       url.searchParams,
     );
 
-    const where = getFilter({ q, type, rating, author });
+    const where = generateWhere({ q, type, rating, author });
 
     const reviews = Review.getAll(PER_PAGE, page, where);
     const count = Review.count(where);
@@ -213,7 +213,7 @@ export default function Reviews(props: PageProps<Props>) {
   );
 }
 
-function getFilter(
+function generateWhere(
   { q, type, rating, author }: Omit<SearchParams, "page">,
 ): Where<keyof ReviewData> | null {
   const filters = [];
