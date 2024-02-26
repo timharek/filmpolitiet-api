@@ -47,7 +47,8 @@ export default function Reviewers(props: PageProps<Props>) {
               <li>
                 <a href={`/reviews?author=${author.id}`} class="underline">
                   {author.fullName}
-                </a>
+                </a>{" "}
+                ({author.count})
               </li>
             ))}
           </ul>

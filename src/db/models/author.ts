@@ -5,16 +5,19 @@ type AuthorData = {
   fullName: string;
   email: string;
   url: string;
+  count: number;
 };
 
-export type AuthorCreateInput = { id?: number } & Omit<AuthorData, "id">;
+export type AuthorCreateInput =
+  & { id?: number }
+  & Omit<AuthorData, "id" | "count">;
 
 export class Author {
   private constructor(private data: AuthorData) {}
 
   public static get(id: number): Author | null {
     const result = db.queryEntries<AuthorData>(
-      "SELECT * FROM author WHERE id = :id",
+      "SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count FROM author WHERE id = :id",
       { id },
     );
 
@@ -31,7 +34,7 @@ export class Author {
   public static getAll(): Author[] {
     const authors: Author[] = [];
     const result = db.queryEntries<AuthorData>(
-      "SELECT * FROM author ORDER BY fullName ASC",
+      "SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count FROM author ORDER BY fullName ASC",
     );
 
     for (const author of result) {
@@ -75,5 +78,9 @@ export class Author {
 
   get fullName() {
     return this.data.fullName;
+  }
+
+  get count() {
+    return this.data.count;
   }
 }
