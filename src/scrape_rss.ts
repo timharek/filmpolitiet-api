@@ -34,9 +34,9 @@ export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
       throw new Error(error, { cause: "fetch" });
     },
   );
-  const items = getItems(feed);
+  const reviews = getReviews(feed);
   const newReviews = [];
-  for (const item of items) {
+  for (const item of reviews) {
     const existingReview = Review.getByUrl(item.link);
     if (existingReview) {
       continue;
@@ -46,15 +46,15 @@ export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
 
   let sucessesfulItems = 0;
   for (const newReview of newReviews) {
-    await resolveItem(newReview);
+    await resolveReview(newReview);
     sucessesfulItems++;
   }
   return sucessesfulItems;
 }
 
-function getItems(feed: string) {
+function getReviews(feed: string) {
   const parsedFeed = feedSchema.parse(parse(feed));
-  const items = parsedFeed.rss.channel.item.filter((item) => {
+  const reviews = parsedFeed.rss.channel.item.filter((item) => {
     if (Array.isArray(item.category) && !item.category.includes("Toppsak")) {
       return item;
     }
@@ -64,7 +64,7 @@ function getItems(feed: string) {
     }
   });
 
-  return items;
+  return reviews;
 }
 
 function getRatingAndType(
@@ -128,7 +128,7 @@ async function parseItem(
   };
 }
 
-async function resolveItem(item: FeedItem) {
+async function resolveReview(item: FeedItem) {
   const { rating, type: typeString } = getRatingAndType(item);
   const type = Review.getType(typeString);
   if (!type) throw new Error("Missing type", { cause: "bad_data" });
@@ -144,7 +144,7 @@ async function resolveItem(item: FeedItem) {
 }
 
 export const forTestingOnly = {
-  getItems,
+  getReviews,
   getRatingFromString,
   getTypeFromString,
   getRatingAndType,

@@ -5,13 +5,13 @@ const testFeedPath = new URL("./testdata/sample-feed.xml", import.meta.url);
 const file = await Deno.readTextFile(testFeedPath);
 
 Deno.test("Number of items", () => {
-  const items = forTestingOnly.getItems(file);
+  const items = forTestingOnly.getReviews(file);
 
   assertEquals(items.length, 10);
 });
 
 Deno.test("Title of some items", () => {
-  const items = forTestingOnly.getItems(file);
+  const items = forTestingOnly.getReviews(file);
   const item1Title = items[1].title;
   const item2Title = items[2].title;
 
@@ -48,7 +48,7 @@ Deno.test("Get type from string: Throw error if wrong", () => {
 });
 
 Deno.test("Get rating and type", () => {
-  const items = forTestingOnly.getItems(file);
+  const items = forTestingOnly.getReviews(file);
   const item = items[1];
   const { rating, type } = forTestingOnly.getRatingAndType(item);
 
