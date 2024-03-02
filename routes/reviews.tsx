@@ -77,7 +77,10 @@ export const handler: Handlers<Props> = {
 export default function Reviews(props: PageProps<Props>) {
   const { data } = props;
   const url = props.url;
-  const urlString = url.toString();
+  // NOTE: `props.url` doesn't take HTTPS into consideration
+  const urlString = props.config.server.hostname === "localhost"
+    ? url.toString()
+    : url.toString().replace("http", "https");
 
   const { q: search, type, author, rating } = searchParamsSchema.parse(
     url.searchParams,
