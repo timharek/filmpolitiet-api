@@ -2,16 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.4] - 2024-03-02
+
+### Documentation
+
+- Add CONTRIBUTING steps
+- Update README
+
+### Features
+
+- Sort authors ASC
+- Add counter to Reviewers
+- Add Markdown docs
+
+### Miscellaneous Tasks
+
+- Update deprecated test imports
+- Cliff skip release commits
+
+### Performance
+
+- Only resolve new reviews
+
+### Refactor
+
+- Simplify reviewers route
+- Rename `getFilter()` -> `generateWhere()`
+- Make into object
+- Rename stuff `item` -> `review`
+
 ## [0.6.3] - 2024-02-24
 
 ### Bug Fixes
 
 - Typo again, this time it works
-
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
 
 ## [0.6.2] - 2024-02-24
 
@@ -19,21 +43,11 @@ All notable changes to this project will be documented in this file.
 
 - Typo again
 
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
-
 ## [0.6.1] - 2024-02-24
 
 ### Bug Fixes
 
 - Typo
-
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
 
 ## [0.6.0] - 2024-02-24
 
@@ -46,10 +60,8 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
-- Update changelog
 - Use import-map
 - Less duplication of code
-- Update version
 
 ### Refactor
 
@@ -65,22 +77,12 @@ All notable changes to this project will be documented in this file.
 
 - API preview included page=2 on pageNo 1
 
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
-
 ## [0.5.4] - 2024-02-24
 
 ### Bug Fixes
 
 - Deprecation
 - Replace `hidden` with `sr-only`
-
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
 
 ### Styling
 
@@ -93,11 +95,6 @@ All notable changes to this project will be documented in this file.
 
 - Add result count
 
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
-
 ### Styling
 
 - Use 6 grid columns
@@ -109,11 +106,6 @@ All notable changes to this project will be documented in this file.
 - Use name
 - Typos
 
-### Miscellaneous Tasks
-
-- Update changelog
-- Update version
-
 ### Performance
 
 - Use smaller images
@@ -123,10 +115,6 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Set default values
-
-### Miscellaneous Tasks
-
-- Update changelog
 
 ## [0.5.0] - 2024-02-24
 
@@ -146,7 +134,6 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
-- Update changelog
 - Remove PocketBase from scraping logic
 - Use SQLite schema for reviewers/authors route
 - Use SQLite schema for entries route
@@ -188,10 +175,6 @@ All notable changes to this project will be documented in this file.
 
 - Use content-type for JSON response
 
-### Miscellaneous Tasks
-
-- Update changelog
-
 ## [0.4.2] - 2023-10-08
 
 ### Bug Fixes
@@ -203,10 +186,6 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Formatting
-
-### Miscellaneous Tasks
-
-- Update changelog
 
 ## [0.4.0] - 2023-10-08
 
