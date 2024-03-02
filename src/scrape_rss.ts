@@ -35,10 +35,18 @@ export async function scrapeRSS({ feedUrl }: ScrapeRSSProps): Promise<number> {
     },
   );
   const items = getItems(feed);
+  const newReviews = [];
+  for (const item of items) {
+    const existingReview = Review.getByUrl(item.link);
+    if (existingReview) {
+      continue;
+    }
+    newReviews.push(item);
+  }
 
   let sucessesfulItems = 0;
-  for (const item of items) {
-    await resolveItem(item);
+  for (const newReview of newReviews) {
+    await resolveItem(newReview);
     sucessesfulItems++;
   }
   return sucessesfulItems;
