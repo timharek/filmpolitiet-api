@@ -1,4 +1,5 @@
-import { assertEquals, assertThrows } from "$std/testing/asserts.ts";
+import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assertThrows } from "$std/assert/assert_throws.ts";
 import { forTestingOnly } from "./scrape_rss.ts";
 
 const testFeedPath = new URL("./testdata/sample-feed.xml", import.meta.url);
