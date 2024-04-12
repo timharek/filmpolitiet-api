@@ -80,6 +80,14 @@ export class Author {
     return this.data.fullName;
   }
 
+  get email() {
+    return this.data.email;
+  }
+
+  get url() {
+    return this.data.url;
+  }
+
   get count() {
     return this.data.count;
   }
