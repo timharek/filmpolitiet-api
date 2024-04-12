@@ -8,6 +8,7 @@ import { Review, ReviewData } from "../src/db/models/review.ts";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { ENTRY_TYPE, Where } from "../src/db.ts";
+import Pagination from "../components/Pagination.tsx";
 
 type Props = {
   reviews: Review[];
@@ -102,10 +103,6 @@ export default function Reviews(props: PageProps<Props>) {
     };
   });
 
-  const nextPage = data.totalPages > data.page ? data.page + 1 : false;
-  const previousPage = data.page > 1 ? data.page - 1 : false;
-  const nextPageUrl = setPage(url, nextPage);
-  const previousPageUrl = setPage(url, previousPage);
   return (
     <>
       <Head>
@@ -190,28 +187,11 @@ export default function Reviews(props: PageProps<Props>) {
           </ul>
         )}
       </div>
-      <div class="px-4 mx-auto max-w-screen-md">
-        <div class="flex flex-wrap justify-between gap-4">
-          {previousPage &&
-            (
-              <a
-                href={previousPageUrl.toString()}
-                class="underline"
-              >
-                {"<"} Previous page
-              </a>
-            )}
-          {nextPage &&
-            (
-              <a
-                href={nextPageUrl.toString()}
-                class="underline"
-              >
-                Next page {">"}
-              </a>
-            )}
-        </div>
-      </div>
+      <Pagination
+        currentUrl={url}
+        currentPageNo={data.page}
+        totalPages={data.totalPages}
+      />
     </>
   );
 }
@@ -246,12 +226,4 @@ function generateWhere(
     return null;
   }
   return { string: filters.join(" AND "), args };
-}
-
-function setPage(url: URL, newPage: number | false) {
-  if (!newPage) {
-    return url.toString();
-  }
-  url.searchParams.set("page", String(newPage));
-  return url.toString();
 }
