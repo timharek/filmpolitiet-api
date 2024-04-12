@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2024-04-12
+
+### Bug Fixes
+
+- HTTP on localhost, HTTPS otherwise
+
+### Features
+
+- Add proper pagination
+- Add RSS feed
+
+### Miscellaneous Tasks
+
+- Make fresh config available to `main.ts` and `dev.ts
+- Add missing getters
+- Add RSS feed to footer and `<head>`
+
 ## [0.6.4] - 2024-03-02
 
 ### Documentation
