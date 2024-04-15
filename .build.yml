@@ -4,6 +4,7 @@ packages:
   - unzip
 environment:
   deploy: tim@vps.tukler.no
+  dir: filmpolitiet-api
 secrets:
   - 0323bc6f-a046-4b96-8496-2bac6e7ee107
 sources:
@@ -18,11 +19,11 @@ tasks:
   - test: |
       DENO_INSTALL="/home/build/.deno"
       PATH="$DENO_INSTALL/bin:$PATH"
-      cd filmpolitiet-api
+      cd $dir
       deno task check
       deno test -A
   - mirror: |
-      cd $DIR
+      cd $dir
       git remote add github git@github.com:timharek/filmpolitiet-api.git
       ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       git push github main
@@ -33,7 +34,7 @@ tasks:
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
         complete-build; \
       fi
-      cd filmpolitiet-api
+      cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
       rsync --rsh="$sshopts" -avrP --exclude "last_deploy" . $deploy:/var/www/filmpolitiet.wyd.no
