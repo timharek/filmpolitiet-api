@@ -16,15 +16,23 @@ tasks:
   - install-deno: |
       curl -fsSL https://deno.land/x/install/install.sh | sh
   - test: |
-        DENO_INSTALL="/home/build/.deno"
-        PATH="$DENO_INSTALL/bin:$PATH"
-        cd filmpolitiet-api
-        deno task check
-        deno test -A
-        if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
-          complete-build; \
-        fi
+      DENO_INSTALL="/home/build/.deno"
+      PATH="$DENO_INSTALL/bin:$PATH"
+      cd filmpolitiet-api
+      deno task check
+      deno test -A
+  - mirror: |
+      cd $DIR
+      git remote add github git@github.com:timharek/filmpolitiet-api.git
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      git push github main
+      if [ "$(git describe --exact-match --tags HEAD)" ]; then \
+        git push --tags github; \
+      fi
   - deploy: |
+      if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
+        complete-build; \
+      fi
       cd filmpolitiet-api
       git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
