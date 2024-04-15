@@ -54,7 +54,7 @@ There is a great reference for commit messages in the
 Before sending the patch, you should configure your local clone with sane
 defaults using `deno task setup:srht`:
 
-And send the patch to the mailing list ([step-by-step
+And send the patch to the mailing list (or submit a PR on GitHub) ([step-by-step
 instructions][git-send-email-tutorial]):
 
 ```bash

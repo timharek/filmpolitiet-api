@@ -1,4 +1,5 @@
 [![builds.sr.ht status](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml.svg)](https://builds.sr.ht/~timharek/filmpolitiet-api/commits/.build.yml?)
+[![GitHub mirror](https://img.shields.io/badge/mirror-GitHub-black.svg?logo=github)](https://github.com/timharek/filmpolitiet-api)
 
 # [Filmpolitiet API](https://sr.ht/~timharek/filmpolitiet-api/)
 
