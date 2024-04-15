@@ -1,7 +1,7 @@
-image: ubuntu/lts
+image: alpine/edge
 packages:
   - rsync
-  - unzip
+  - deno
 environment:
   deploy: tim@vps.tukler.no
   dir: filmpolitiet-api
