@@ -50,14 +50,17 @@ export default function Page({ data }: PageProps<Props>) {
 }
 
 async function getPage(slug: string): Promise<Props | null> {
+  const filePath = new URL(`../docs/${slug}.md`, import.meta.url);
   try {
-    const file = await Deno.readTextFile(
-      new URL(`../docs/${slug}.md`, import.meta.url),
-    );
+    const file = await Deno.readTextFile(filePath);
     const { body, attrs } = extract(file);
 
     return { body, attrs };
   } catch (error) {
+    if (error instanceof Deno.errors.NotFound) {
+      console.error(`Unable to find file: ${filePath}`);
+      return null;
+    }
     console.error(error);
     return null;
   }
