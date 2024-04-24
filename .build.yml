@@ -27,10 +27,10 @@ tasks:
         git push --tags github; \
       fi
   - deploy: |
+      cd $dir
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
         complete-build; \
       fi
-      cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
       rsync --rsh="$sshopts" -avrP --exclude "last_deploy" . $deploy:/var/www/filmpolitiet.wyd.no
