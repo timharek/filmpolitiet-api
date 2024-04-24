@@ -9,7 +9,6 @@ export const handler: Handlers = {
     const latestReviews = Review.getAll({ pageSize: 20, pageNo: 1 });
 
     const rss = generateXML(latestReviews);
-    console.log(Deno.inspect(config));
 
     return new Response(rss, { headers: { "content-type": "text/xml" } });
   },
