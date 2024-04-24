@@ -4,6 +4,11 @@ import { Dice } from "./Dice.tsx";
 type CardProps = {
   review: Review;
 };
+const typeMap = {
+  movie: "🎬 Movie",
+  show: "📺 TV",
+  game: "🎮 Game",
+};
 export function Card({ review }: CardProps) {
   const reviewDate = review.reviewDate;
   return (
@@ -19,7 +24,7 @@ export function Card({ review }: CardProps) {
           />
         </div>
         <div class="absolute z-20 top-0 right-0 px-2 py-1 bg-primary text-black uppercase font-semibold rounded-bl">
-          {review.type}
+          {typeMap[review.type as keyof typeof typeMap]}
         </div>
         {review.coverArtUrl &&
           (
