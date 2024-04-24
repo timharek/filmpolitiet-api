@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2024-04-24
+
+### Features
+
+- Add favicon.ico route handler
+- Add 404 page
+- Add robots.txt
+
+### Miscellaneous Tasks
+
+- Remove boilerplate fresh stuff
+
+### Refactor
+
+- Add better NotFound error message
+
 ## [0.7.1] - 2024-04-24
 
 ### Bug Fixes
