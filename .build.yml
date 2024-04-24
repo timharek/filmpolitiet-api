@@ -2,9 +2,11 @@ image: alpine/edge
 packages:
   - rsync
   - deno
+  - git-cliff
 environment:
   deploy: tim@vps.tukler.no
   dir: filmpolitiet-api
+  source: git@git.sr.ht:~timharek/filmpolitiet-api
 secrets:
   - 0323bc6f-a046-4b96-8496-2bac6e7ee107
 sources:
@@ -26,11 +28,24 @@ tasks:
       if [ "$(git describe --exact-match --tags HEAD)" ]; then \
         git push --tags github; \
       fi
-  - deploy: |
+  - update_changelog: |
       cd $dir
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
         complete-build; \
       fi
+      git cliff -o CHANGELOG.md
+  - set_srht_defaults: |
+      cd $dir
+      ssh-keyscan -t rsa git.sr.ht >> ~/.ssh/known_hosts
+      git remote set-url origin $source
+  - push_changelog: |
+      cd $dir
+      git checkout main
+      git add CHANGELOG.md
+      git commit -m "chore(release): Update CHANGELOG"
+      git push -o skip-ci
+  - deploy: |
+      cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
       rsync --rsh="$sshopts" -avrP --exclude "last_deploy" . $deploy:/var/www/filmpolitiet.wyd.no
