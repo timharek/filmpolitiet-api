@@ -14,11 +14,7 @@ triggers:
     condition: failure
     to: tim@harek.no
 tasks:
-  - install-deno: |
-      curl -fsSL https://deno.land/x/install/install.sh | sh
   - test: |
-      DENO_INSTALL="/home/build/.deno"
-      PATH="$DENO_INSTALL/bin:$PATH"
       cd $dir
       deno task check
       deno test -A
