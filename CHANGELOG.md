@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2024-04-24
+
+### Bug Fixes
+
+- Typos
+
+### Documentation
+
+- Update README
+
+### Miscellaneous Tasks
+
+- Mirror to GitHub
+- Use alpine/edge
+- Remove old console.log
+- Remove install deno step
+- Fix order for checking if new release
+- Add automated changelog
+
+### Styling
+
+- Add emoji-flare to Card
+
 ## [0.7.0] - 2024-04-12
 
 ### Bug Fixes
