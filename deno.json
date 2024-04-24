@@ -1,7 +1,7 @@
 {
   "lock": false,
   "name": "Filmpolitiet API",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "changelog": "https://git.sr.ht/~timharek/filmpolitiet-api/tree/main/item/CHANGELOG.md",
   "tasks": {
     "dev": "deno run -A --watch=static/,routes/ dev.ts",
