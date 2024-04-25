@@ -33,17 +33,15 @@ tasks:
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
         complete-build; \
       fi
+      git checkout main
       git cliff -o CHANGELOG.md
+      git add CHANGELOG.md
+      git commit -m "chore(release): Update CHANGELOG"
+      git push -o skip-ci
   - set_srht_defaults: |
       cd $dir
       ssh-keyscan -t rsa git.sr.ht >> ~/.ssh/known_hosts
       git remote set-url origin $source
-  - push_changelog: |
-      cd $dir
-      git checkout main
-      git add CHANGELOG.md
-      git commit -m "chore(release): Update CHANGELOG"
-      git push -o skip-ci
   - deploy: |
       cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
