@@ -53,6 +53,16 @@ export class Author {
     return authors;
   }
 
+  /**
+   * Count of authors.
+   */
+  public static get count(): number {
+    const countObjects = db.queryEntries<{ "count(*)": number }>(
+      `SELECT count(*) FROM author;`,
+    );
+    return countObjects[0]["count(*)"];
+  }
+
   public static getByEmail(email: string): Author | null {
     const result = db.queryEntries<AuthorData>(
       "SELECT * FROM author WHERE email = :email",
@@ -93,9 +103,31 @@ export class Author {
     return this.create(input);
   }
 
-  // TODO: Update author. https://todo.sr.ht/~timharek/filmpolitiet-api/6
   public update(data: Partial<AuthorCreateInput>): Author {
-    throw new Error("Not implemented");
+    db.queryEntries<AuthorData>(
+      `UPDATE author
+        SET 
+          fullName = CASE WHEN :fullName IS NOT NULL THEN :fullName ELSE fullName END,
+          email = CASE WHEN :email IS NOT NULL THEN :email ELSE email END,
+          url = CASE WHEN :url IS NOT NULL THEN :url ELSE url END
+        WHERE id = :id`,
+      { ...data, id: this.id },
+    );
+
+    return this.get();
+  }
+
+  private get(): Author {
+    const result = db.queryEntries<AuthorData>(
+      "SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count FROM author WHERE id = :id",
+      { id: this.id },
+    );
+
+    if (result.length === 0 || !result[0]) {
+      throw new Error("Author doesn't exist, should not be possible.");
+    }
+
+    return new Author(result[0]);
   }
 
   get id() {
@@ -114,7 +146,7 @@ export class Author {
     return this.data.url;
   }
 
-  get count() {
+  get reviewCount() {
     return this.data.count;
   }
 }
