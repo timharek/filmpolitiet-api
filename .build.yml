@@ -19,7 +19,7 @@ tasks:
   - test: |
       cd $dir
       deno task check
-      deno test -A
+      deno task test
   - mirror: |
       cd $dir
       git remote add github git@github.com:timharek/filmpolitiet-api.git
