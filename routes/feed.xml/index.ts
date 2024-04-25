@@ -1,20 +1,19 @@
 import { Handlers } from "$fresh/server.ts";
 import { stringify } from "xml";
 import denoConfig from "../../deno.json" with { type: "json" };
-import config from "../../fresh.config.ts";
 import { Review } from "../../src/db/models/review.ts";
 
 export const handler: Handlers = {
-  GET(_req, _ctx) {
+  GET(req, _ctx) {
     const latestReviews = Review.getAll({ pageSize: 20, pageNo: 1 });
 
-    const rss = generateXML(latestReviews);
+    const rss = generateXML(latestReviews, req.url);
 
     return new Response(rss, { headers: { "content-type": "text/xml" } });
   },
 };
 
-function generateXML(reviews: Review[]): string {
+function generateXML(reviews: Review[], feedUrl: string): string {
   const entries = reviews.map((review) => {
     return {
       "@xml:lang": "en",
@@ -40,7 +39,6 @@ function generateXML(reviews: Review[]): string {
       },
     };
   });
-  const feedUrl = `https://${config.hostname}/feed.xml`;
   const feedXML = stringify({
     xml: {
       "@version": "1.0",
@@ -58,7 +56,7 @@ function generateXML(reviews: Review[]): string {
           "@type": "application/atom+xml",
         },
         {
-          "@href": `https://${config.hostname}`,
+          "@href": feedUrl,
         },
       ],
       updated: reviews[0].reviewDate.toISOString(),
