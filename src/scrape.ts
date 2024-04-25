@@ -163,7 +163,7 @@ export async function getAuthor(
     throw new Error("Failed to create new author", { cause: "faulty_data" });
   }
   if (isOverwriting) {
-    // TODO: Update author. https://todo.sr.ht/~timharek/filmpolitiet-api/6
+    author.update({});
   }
 
   return author;

@@ -81,6 +81,23 @@ export class Author {
     return created;
   }
 
+  public static upsert(
+    data: AuthorCreateInput & { id: number },
+  ): Author | null {
+    const { id, ...input } = data;
+    const existing = this.get(id);
+    if (existing) {
+      return existing.update(input);
+    }
+
+    return this.create(input);
+  }
+
+  // TODO: Update author. https://todo.sr.ht/~timharek/filmpolitiet-api/6
+  public update(data: Partial<AuthorCreateInput>): Author {
+    throw new Error("Not implemented");
+  }
+
   get id() {
     return this.data.id;
   }
