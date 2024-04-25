@@ -28,6 +28,10 @@ tasks:
       if [ "$(git describe --exact-match --tags HEAD)" ]; then \
         git push --tags github; \
       fi
+  - set_srht_defaults: |
+      cd $dir
+      ssh-keyscan -t rsa git.sr.ht >> ~/.ssh/known_hosts
+      git remote set-url origin $source
   - update_changelog: |
       cd $dir
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
@@ -38,10 +42,6 @@ tasks:
       git add CHANGELOG.md
       git commit -m "chore(release): Update CHANGELOG"
       git push -o skip-ci
-  - set_srht_defaults: |
-      cd $dir
-      ssh-keyscan -t rsa git.sr.ht >> ~/.ssh/known_hosts
-      git remote set-url origin $source
   - deploy: |
       cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
