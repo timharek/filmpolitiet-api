@@ -3,7 +3,7 @@ import { DB } from "sqlite";
 
 const dbPath = Deno.env.get("DB_PATH");
 if (!dbPath) {
-  throw new Error("Missing `DB_PATH`", { cause: "environment" });
+  console.warn("No path for SQLite, using memory instead");
 }
 export const db = new DB(dbPath);
 
