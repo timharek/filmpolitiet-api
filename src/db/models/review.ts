@@ -107,18 +107,14 @@ export class Review {
     const existing = this.getByUrl(data.url);
     if (existing) return existing;
 
-    const created = db.queryEntries<ReviewData>(
+    db.queryEntries<ReviewData>(
       `INSERT INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
         (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
       `,
       data,
     );
 
-    if (created.length === 0 || !created[0]) {
-      return null;
-    }
-
-    return new Review(created[0]);
+    return this.get(db.lastInsertRowId);
   }
 
   public static upsert(data: ReviewCreateInput): Review | null {
