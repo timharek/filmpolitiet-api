@@ -92,15 +92,14 @@ export class Author {
   }
 
   public static upsert(
-    data: AuthorCreateInput & { id: number },
+    data: AuthorCreateInput,
   ): Author | null {
-    const { id, ...input } = data;
-    const existing = this.get(id);
+    const existing = this.getByEmail(data.email);
     if (existing) {
-      return existing.update(input);
+      return existing.update(data);
     }
 
-    return this.create(input);
+    return this.create(data);
   }
 
   public update(data: Partial<AuthorCreateInput>): Author {

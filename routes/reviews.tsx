@@ -99,7 +99,7 @@ export default function Reviews(props: PageProps<Props>) {
   const authorOptions: SelectOption[] = data.authors.map((author) => {
     return {
       value: String(author.id),
-      label: `${author.fullName} (${author.count})`,
+      label: `${author.fullName} (${author.reviewCount})`,
     };
   });
 

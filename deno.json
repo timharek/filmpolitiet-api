@@ -10,7 +10,8 @@
     "setup:srht": "git config format.subjectPrefix 'PATCH filmpolitiet-api' && git config sendemail.to '~timharek/filmpolitiet-api-dev@lists.sr.ht' && git config sendemail.validate true",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "build": "deno run -A dev.ts build",
-    "preview": "deno run -A main.ts"
+    "preview": "deno run -A main.ts",
+    "test": "DB_PATH='' deno test -A"
   },
   "githooks": {
     "pre-commit": "check"

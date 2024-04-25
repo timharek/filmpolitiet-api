@@ -22,7 +22,7 @@ export default function Reviewers() {
                 <a href={`/reviews?author=${author.id}`} class="underline">
                   {author.fullName}
                 </a>{" "}
-                ({author.count})
+                ({author.reviewCount})
               </li>
             ))}
           </ul>
