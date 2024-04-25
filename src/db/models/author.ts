@@ -1,4 +1,4 @@
-import { db } from "../../db.ts";
+import { db, Where } from "../../db.ts";
 
 type AuthorData = {
   id: number;
@@ -28,14 +28,23 @@ export class Author {
     return new Author(result[0]);
   }
 
-  /**
-   * TODO: Add filter. https://todo.sr.ht/~timharek/filmpolitiet-api/4
-   */
-  public static getAll(): Author[] {
+  public static getAll(
+    order: { column: keyof AuthorData; by: "ASC" | "DESC" } = {
+      column: "fullName",
+      by: "ASC",
+    },
+    where?: Where<keyof AuthorData>,
+  ): Author[] {
     const authors: Author[] = [];
-    const result = db.queryEntries<AuthorData>(
-      "SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count FROM author ORDER BY fullName ASC",
+    let result = db.queryEntries<AuthorData>(
+      `SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count FROM author ORDER BY ${order.column} ${order.by}`,
     );
+    if (where) {
+      result = db.queryEntries<AuthorData>(
+        `SELECT author.*, (SELECT COUNT(*) FROM entry WHERE authorId = author.id) AS count WHERE ${where.string} FROM author ORDER BY ${order.column} ${order.by}`,
+        where.args,
+      );
+    }
 
     for (const author of result) {
       authors.push(new Author(author));
