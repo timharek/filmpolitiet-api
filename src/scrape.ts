@@ -48,8 +48,7 @@ export async function scrape(
 
   for await (const entry of parsedEntries) {
     if (isOverwriting) {
-      // TODO: Add upcate method. https://todo.sr.ht/~timharek/filmpolitiet-api/5
-      console.log("overwriting");
+      console.log("overwriting/upserting");
       Review.upsert(entry);
       continue;
     }

@@ -117,18 +117,44 @@ export class Review {
     return this.get(db.lastInsertRowId);
   }
 
-  public static upsert(data: ReviewCreateInput): Review | null {
-    const updated = db.queryEntries<ReviewData>(
-      `INSERT OR REPLACE INTO entry (title, url, rating, coverArtUrl, reviewDate, typeId, authorId) VALUES
-        (:title, :url, :rating, :coverArtUrl, :reviewDate, :typeId, :authorId);
-      `,
-      data,
+  public update(data: Partial<ReviewCreateInput>): Review {
+    db.queryEntries<ReviewData>(
+      `UPDATE entry
+        SET 
+          title = CASE WHEN :title IS NOT NULL THEN :title ELSE title END,
+          url = CASE WHEN :url IS NOT NULL THEN :url ELSE url END,
+          coverArtUrl = CASE WHEN :coverArtUrl IS NOT NULL THEN :coverArtUrl ELSE coverArtUrl END,
+          rating = CASE WHEN :rating IS NOT NULL THEN :rating ELSE rating END,
+          reviewDate = CASE WHEN :reviewDate IS NOT NULL THEN :reviewDate ELSE reviewDate END,
+          typeId = CASE WHEN :typeId IS NOT NULL THEN :typeId ELSE typeId END,
+          authorId = CASE WHEN :authorId IS NOT NULL THEN :authorId ELSE authorId END
+        WHERE id = :id`,
+      { ...data, id: this.data.id },
     );
-    if (updated.length === 0 || !updated[0]) {
-      return null;
+
+    return this.get();
+  }
+
+  private get(): Review {
+    const result = db.queryEntries<ReviewData>(
+      "SELECT * FROM entry WHERE id = :id",
+      { id: this.data.id },
+    );
+
+    if (result.length === 0 || !result[0]) {
+      throw new Error("Review doesn't exist, should not be possible.");
     }
 
-    return new Review(updated[0]);
+    return new Review(result[0]);
+  }
+
+  public static upsert(data: ReviewCreateInput): Review | null {
+    const existing = this.getByUrl(data.url);
+    if (existing) {
+      return existing.update(data);
+    }
+
+    return this.create(data);
   }
 
   get type(): string {
