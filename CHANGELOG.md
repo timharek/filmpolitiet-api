@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.5] - 2024-04-25
+
+### Miscellaneous Tasks
+
+- Fix order
+
+## [0.7.4] - 2024-04-25
+
+### Bug Fixes
+
+- Use correct feedUrl
+
+### Miscellaneous Tasks
+
+- Simplify changelog generation
+
 ## [0.7.2] - 2024-04-24
 
 ### Features
