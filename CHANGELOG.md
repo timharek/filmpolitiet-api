@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2024-04-25
+
+### Bug Fixes
+
+- Actually return newly created Review
+
+### Features
+
+- Add filter to authors
+- Add initial upsert() to Author
+- Add update() to Author
+- Add Author model tests
+- Add updated() to Review
+- Add Review model tests
+
+### Miscellaneous Tasks
+
+- Update test step
+
+### Refactor
+
+- Allow no path for SQLite db
+
 ## [0.7.5] - 2024-04-25
 
 ### Miscellaneous Tasks
