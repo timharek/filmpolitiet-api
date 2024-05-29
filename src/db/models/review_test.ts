@@ -1,4 +1,4 @@
-import { assertExists } from "$std/assert/mod.ts";
+import { assertExists } from "@std/assert";
 import { assertEquals } from "https://deno.land/std@0.216.0/assert/assert_equals.ts";
 import { Review } from "./review.ts";
 import { Author } from "./author.ts";

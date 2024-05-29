@@ -1,4 +1,4 @@
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { Handlers } from "$fresh/server.ts";
 
 export const handler: Handlers = {

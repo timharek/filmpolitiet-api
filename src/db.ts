@@ -1,4 +1,4 @@
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { DB } from "sqlite";
 
 const dbPath = Deno.env.get("DB_PATH");

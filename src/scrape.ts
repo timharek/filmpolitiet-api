@@ -1,4 +1,4 @@
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { DOMParser, Element, HTMLDocument } from "deno_dom";
 import { STATUS_CODE } from "$fresh/server.ts";
 import { Author, AuthorCreateInput } from "./db/models/author.ts";

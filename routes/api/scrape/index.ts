@@ -1,4 +1,4 @@
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { scrape } from "../../../src/scrape.ts";
 import { ZodError } from "zod";

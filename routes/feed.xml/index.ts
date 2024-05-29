@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import { stringify } from "xml";
+import { stringify } from "@libs/xml";
 import denoConfig from "../../deno.json" with { type: "json" };
 import { Review } from "../../src/db/models/review.ts";
 

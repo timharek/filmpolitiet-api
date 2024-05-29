@@ -1,8 +1,8 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
-import { extract } from "$std/front_matter/toml.ts";
+import { extract } from "@std/front-matter/toml";
 import { PageProps } from "$fresh/src/server/types.ts";
-import { CSS, render } from "$gfm";
+import { CSS, render } from "@deno/gfm";
 import "https://esm.sh/prismjs@1.29.0/components/prism-bash?no-check";
 
 type Props = {

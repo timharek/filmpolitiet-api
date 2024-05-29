@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assertEquals } from "@std/assert";
 import { HTMLDocument } from "deno_dom";
 import { forTestingOnly } from "./scrape.ts";
 
