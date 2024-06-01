@@ -5,8 +5,7 @@ packages:
   - git-cliff
 environment:
   deploy: tim@vps.tukler.no
-  dir: filmpolitiet-api
-  source: git@git.sr.ht:~timharek/filmpolitiet-api
+  GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
 secrets:
   - 0323bc6f-a046-4b96-8496-2bac6e7ee107
 sources:
@@ -16,24 +15,14 @@ triggers:
     condition: failure
     to: tim@harek.no
 tasks:
+  - setup: |
+      echo 'cd filmpolitiet-api' >> ~/.buildenv
   - test: |
-      cd $dir
       deno task check
       deno task test
   - mirror: |
-      cd $dir
-      git remote add github git@github.com:timharek/filmpolitiet-api.git
-      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-      git push github main
-      if [ "$(git describe --exact-match --tags HEAD)" ]; then \
-        git push --tags github; \
-      fi
-  - set_srht_defaults: |
-      cd $dir
-      ssh-keyscan -t rsa git.sr.ht >> ~/.ssh/known_hosts
-      git remote set-url origin $source
+      git push --force --mirror git@github.com:timharek/filmpolitiet-api.git
   - update_changelog: |
-      cd $dir
       if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
         complete-build; \
       fi
@@ -43,7 +32,6 @@ tasks:
       git commit -m "chore(release): Update CHANGELOG"
       git push -o skip-ci
   - deploy: |
-      cd $dir
       git --no-pager log -1 --format=%ci > last_deploy
       sshopts="ssh -o StrictHostKeyChecking=no"
       rsync --rsh="$sshopts" -avrP --exclude "last_deploy" . $deploy:/var/www/filmpolitiet.wyd.no
