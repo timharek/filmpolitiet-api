@@ -2,6 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { stringify } from "@libs/xml";
 import denoConfig from "../../deno.json" with { type: "json" };
 import { Review } from "../../src/db/models/review.ts";
+import { escape } from "@std/html/entities";
 
 export const handler: Handlers = {
   GET(req, _ctx) {
@@ -34,16 +35,13 @@ function generateXML(reviews: Review[], feedUrl: string): string {
       // TODO: Add `category`.
       content: {
         "@type": "html",
-        "#text":
+        "#text": escape(
           `<p>Dice-roll: ${review.rating}<br><a href="${review.url}">Read more</a><br><img src="${review.coverArtUrl}" /></p>`,
+        ),
       },
     };
   });
   const feedXML = stringify({
-    xml: {
-      "@version": "1.0",
-      "@encoding": "UTF-8",
-    },
     feed: {
       "@xmlns": "http://www.w3.org/2005/Atom",
       "@xml:lang": "en",
