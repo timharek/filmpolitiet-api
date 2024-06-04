@@ -22,10 +22,13 @@ tasks:
       deno task test
   - mirror: |
       git push --force --mirror git@github.com:timharek/filmpolitiet-api.git
-  - update_changelog: |
-      if ! [ "$(git describe --exact-match --tags HEAD)" ]; then \
-        complete-build; \
+  - check_release: |
+      tag=$(git describe --exact-match --tags HEAD 2>/dev/null || true)
+      if [ -z "$tag" ]; then
+        echo "Current commit is not a tag: not a new release"
+        complete-build
       fi
+  - update_changelog: |
       git checkout main
       git cliff -o CHANGELOG.md
       git add CHANGELOG.md
