@@ -140,7 +140,7 @@ export default function Reviews(props: PageProps<Props>) {
               defaultValue={String(rating) ?? ""}
             />
             <Select
-              label="Author"
+              label="Reviewer"
               name="author"
               options={authorOptions}
               defaultValue={String(author) ?? ""}
