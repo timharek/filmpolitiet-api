@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2024-09-15
+
+### Bug Fixes
+
+- Use proper Atom schema
+
+### Features
+
+- Add proper favicon
+
+### Miscellaneous Tasks
+
+- Simplify
+- Cleaner way to check for new release tag
+
+### Refactor
+
+- Use JSR modules instead of /x
+
 ## [1.0.0] - 2024-04-25
 
 ### Bug Fixes
