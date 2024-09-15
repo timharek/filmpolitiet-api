@@ -9,7 +9,7 @@ environment:
 secrets:
   - 0323bc6f-a046-4b96-8496-2bac6e7ee107
 sources:
-  - https://git@git.sr.ht/~timharek/filmpolitiet-api
+  - git@git.sr.ht:~timharek/filmpolitiet-api
 triggers:
   - action: email
     condition: failure
